@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 conn = pymysql.connect(
-        host=os.environ['FLASK_DATABASE_HOST'], #Se usa corchetes porque son propiedades de la configuracion
+        host=os.environ['FLASK_DATABASE_HOST'],
         user=os.environ['FLASK_DATABASE_USER'],
         password=os.environ['FLASK_DATABASE_PASSWORD'],
         database=os.environ['FLASK_DATABASE']
@@ -20,7 +20,7 @@ def udp():
 
     try:
         server_udp = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-        server_udp.bind(('192.168.1.6', 8051))
+        server_udp.bind(('0.0.0.0', 8051))
         print("Servidor UDP funcionando...")
         while True:
             server_address = server_udp.recvfrom(1024)
