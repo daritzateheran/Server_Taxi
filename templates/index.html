@@ -95,7 +95,7 @@ crossorigin=""></script>
                 changetime.innerHTML = `${sqld[0][3]}`
                 changehour.innerHTML = `${sqld[0][4]}`
                 
-                //mymap.setView([sqld[0][1],sqld[0][2]], mymap.getZoom());
+                mymap.setView([sqld[0][1],sqld[0][2]], mymap.getZoom());
                 //Polilinea.
                 var loc = [sqld[0][1],sqld[0][2]];
                 ruta.push(loc);
