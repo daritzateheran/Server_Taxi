@@ -62,7 +62,7 @@ def get_data():
 
 #hello world
         
-@app.route('/changes') #git hub
+@app.route('/changes', methods=["POST"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
     print('Se hizo el pull')
