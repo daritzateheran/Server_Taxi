@@ -45,41 +45,73 @@ crossorigin=""></script>
 
 <script type="text/javascript"> 
 
-    const mymap = L.map('TaxiMap').setView([10.92814333,-74.81381546,], 20);
+    var ruta = new Array()
+    var x = 1;
+    var customIcon = new L.Icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/4214/4214491.png',
+        iconSize: [50, 50],
+        iconAnchor: [25,25]
+    });
+    const mymap = L.map('TaxiMap').setView([10.968638,-74.806644,], 14);
     const attribution =
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
     const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
     const tiles = L.tileLayer(tileUrl, { attribution });
     tiles.addTo(mymap);
-    let marker = L.marker([0, 0]).addTo(mymap);
+    let marker = L.marker([0, 0], {icon: customIcon}).addTo(mymap);
+    let inicio = L.marker([0, 0]).addTo(mymap);
+
      // SELECCIONAR ELEMENTOS DEL HTML
     const changelat = document.querySelector('#latitud');
     const changelong = document.querySelector('#longitud');
     const changetime = document.querySelector('#fecha');
     const changehour = document.querySelector('#hora');
+
    
-    setInterval('reload()', 3000);
-    
+    setInterval('reload()', 1000); 
 
-    async function reload() {
-        try {
-            let response = await fetch('/sqldata'); //por defecto get, 
-            sqld = await response.json();
-        }
-        catch(err) {
-            console,log(err)
-        }
-        
-        console.log(sqld[0][0]); 
+    function reload() {
 
-        changelat.innerHTML = `${sqld[0][1]}`
-        changelong.innerHTML = `${sqld[0][2]}`
-        changetime.innerHTML = `${sqld[0][3]}`
-        changehour.innerHTML = `${sqld[0][4]}`
+        //let response = await fetch(url);
+        //response.json();
+        //console.log(sqld);
+
+        const http = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
+        http.open('GET', "/sqldata")
+        http.onreadystatechange = function(){
+            if (http.readyState == 4 && http.status == 200){
+                var sqld = http.responseText;
+                sqld = JSON.parse(sqld);
+                console.log(sqld);
+                if (x==1){
+                    inicio.setLatLng([sqld[0][1], sqld[0][2]]);
+                    x=0;
+                }
+
+                 // modificar campos de html, hacer el link
+                changelat.innerHTML = `${sqld[0][1]}`
+                changelong.innerHTML = `${sqld[0][2]}`
+                changetime.innerHTML = `${sqld[0][3]}`
+                changehour.innerHTML = `${sqld[0][4]}`
                 
-        mymap.setView([sqld[0][1],sqld[0][2]], mymap.getZoom());
-        marker.setLatLng([sqld[0][1], sqld[0][2]]);
+                //mymap.setView([sqld[0][1],sqld[0][2]], mymap.getZoom());
+                //Polilinea.
+                var loc = [sqld[0][1],sqld[0][2]];
+                ruta.push(loc);
+                var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
+
+
+                marker.setLatLng([sqld[0][1], sqld[0][2]]);
+                console.log(sqld[0][0]);
+            }
+            else {
+                console.log("Ready state", http.readyState);
+                console.log("Ready status", http.status);
+            }
+        }
+        http.send(null);
+
     }
 </script>
 
