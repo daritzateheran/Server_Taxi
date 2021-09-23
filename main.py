@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, g
 
-import socket, threading, pymysql, os
+import socket, threading, pymysql, os 
 
 app = Flask(__name__)
 
@@ -60,6 +60,11 @@ def get_data():
         print (datos)
         return jsonify(datos)
         
+@app.route('/changes') #git hub
+def pull():
+    os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
+    print('Se hizo el pull')
+
         
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)
