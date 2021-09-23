@@ -66,7 +66,7 @@ def get_data():
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
     print('Se hizo el pull, celebralo')
-    return 0
+    return('Se hizo el pull, celebralo')
 
 
         
