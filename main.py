@@ -59,6 +59,8 @@ def get_data():
         cur.close()
         print (datos)
         return jsonify(datos)
+
+#hello world
         
 @app.route('/changes') #git hub
 def pull():
