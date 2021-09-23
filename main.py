@@ -65,7 +65,9 @@ def get_data():
 @app.route('/changes', methods=["POST"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
-    print('Se hizo el pull, right?')
+    print('Se hizo el pull')
+    print('1,2,3')
+
 
         
 if __name__ == '__main__':
