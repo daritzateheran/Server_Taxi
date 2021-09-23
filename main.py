@@ -16,6 +16,8 @@ def get_conn():
         g.cur=g.conn.cursor()
     return g.conn, g.cur
 
+#comentario
+
 def udp():
     conn = pymysql.connect(
             host=os.environ['FLASK_DATABASE_HOST'],
@@ -26,7 +28,7 @@ def udp():
     cur=conn.cursor()
     try:
         server_udp = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-        server_udp.bind(('0.0.0.0', 8051))
+        server_udp.bind(('0.0.0.0', 8051)) #cualquier cliente de la app, puede mandar datos
         print("Servidor UDP funcionando...")
         while True:
             server_address = server_udp.recvfrom(1024)
