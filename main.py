@@ -60,12 +60,12 @@ def get_data():
         print (datos)
         return jsonify(datos)
 
-#hello world
+
         
 @app.route('/changes', methods=["POST"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
-    print('Se hizo el pull')
+    print('Se hizo el pull, right?')
 
         
 if __name__ == '__main__':
