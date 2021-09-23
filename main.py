@@ -47,7 +47,7 @@ def udp():
 
 @app.route('/')
 def index():
-    return render_template('main.html')
+    return render_template('index.html')
 
 @app.route('/sqldata')
 def get_data():
