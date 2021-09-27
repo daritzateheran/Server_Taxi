@@ -35,6 +35,21 @@ crossorigin=""></script>
                 <p class="informacion labels">Fecha: </p>
                 <p class="informacion" id="hora"></p>
             </div>
+
+            <label for="meeting-time">Ingrese el rango de fecha y hora inicial:</label>
+
+            <input type="datetime-local" id="inicio"
+                name="meeting-time" value="2021-09-27T14:30"
+                min="2021-09-27T00:00" max="2021-09-28T00:00">   
+                    
+            <label for="meeting-time">Ingrese el rango de fecha y hora final:</label>
+
+            <input type="datetime-local" id="fin"
+                name="meeting-time" value="2021-09-27T14:30"
+                min="2021-09-27T00:00" max="2021-09-28T00:00"> 
+            
+            <input type="button" class="btn btn-outline-warning" value="Consultar" onclick="cosulta()" > 
+
         </div>
         <div id="TaxiMap" class="mapa"></div>
     </div>
@@ -67,12 +82,17 @@ crossorigin=""></script>
     const changelong = document.querySelector('#longitud');
     const changetime = document.querySelector('#fecha');
     const changehour = document.querySelector('#hora');
-
+    //const historybutton = document.getElementById('button');
     
     
     //http request escuchando el boton del usuario, aquí pon la parte del boton
 
+    //document.getElementById('button').addEventListener('click', consulta);
 
+    /*function consulta(){
+
+    }/*
+    
     //llenar vector de la polilinea
     /*const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
         httpH.open('GET', "/historicos")
