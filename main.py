@@ -4,6 +4,7 @@ import socket, threading, pymysql, os
 
 app = Flask(__name__)
 
+print('ESTE ES UN CAMBIO PARA MASTER')
 
 def get_conn():
     if "conn" not in g:
@@ -68,7 +69,8 @@ def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
     return 'hello'
 
-        
+
+
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)
     server_udp.start()
