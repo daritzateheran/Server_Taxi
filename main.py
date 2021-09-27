@@ -17,6 +17,7 @@ def get_conn():
     return g.conn, g.cur
 
 #comentario
+#Cambio master 
 
 def udp():
     conn = pymysql.connect(
@@ -64,8 +65,10 @@ def get_data():
         
 @app.route('/changes', methods=["POST"]) #git hub
 def pull():
+    print('Sí cambia holis buenas taardes')
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
     return 'hello'
+
 
         
 if __name__ == '__main__':
