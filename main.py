@@ -65,7 +65,7 @@ def get_data():
 
 #Esto es un cambio
 
-@app.route('/changes', methods=["POST"]) #git hub
+@app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
     print('FUNCIONA EL PULL con diana?')
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
