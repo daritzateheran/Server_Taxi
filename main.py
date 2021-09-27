@@ -4,7 +4,6 @@ import socket, threading, pymysql, os
 
 app = Flask(__name__)
 
-print('ESTE ES UN GRAN CAMBIO PARA MASTER, QUE HACE DARITZA')
 print('ESTE ES UN GRAN CAMBIO PARA MASTER, QUE HACE DARITZA, se refleja en diana?')
 
 
@@ -68,7 +67,7 @@ def get_data():
 
 @app.route('/changes', methods=["POST"]) #git hub
 def pull():
-    print('FUNCIONA EL PULL?')
+    print('FUNCIONA EL PULL con diana?')
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
     return 'hello'
 
