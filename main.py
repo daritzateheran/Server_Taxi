@@ -4,7 +4,7 @@ import socket, threading, pymysql, os
 
 app = Flask(__name__)
 
-print('ESTE ES UN GRAN CAMBIO PARA MASTER, QUE HACE DARITZA, se refleja en diana?')
+print('CAMBIO DEFINITIVOOOO')
 
 
 def get_conn():
