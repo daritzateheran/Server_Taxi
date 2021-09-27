@@ -61,7 +61,8 @@ def get_data():
         return jsonify(datos)
 
 
-        
+#Esto es un cambio
+
 @app.route('/changes', methods=["POST"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
