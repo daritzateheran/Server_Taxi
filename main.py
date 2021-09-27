@@ -70,7 +70,6 @@ def pull():
     return 'hello'
 
 
-
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)
     server_udp.start()
