@@ -68,7 +68,36 @@ crossorigin=""></script>
     const changetime = document.querySelector('#fecha');
     const changehour = document.querySelector('#hora');
 
-    setInterval('reload()', 1000); 
+    
+    
+    //http request escuchando el boton del usuario, aquí pon la parte del boton
+
+
+    //llenar vector de la polilinea
+    /*const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
+        httpH.open('GET', "/historicos")
+        httpH.onreadystatechange = function(){
+            if (http.readyState == 4 && http.status == 200){
+                var rutahist = http.responseText;
+                rutahist = JSON.parse(rutahist);
+
+                //polilinea
+                var loc = [sqld[0][1],sqld[0][2]];
+                ruta.push(loc);
+                var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
+            
+            }
+            else {
+                console.log("Ready state", http.readyState);
+                console.log("Ready status", http.status);
+            }
+        }
+        httpH.send(null);*/
+
+
+    setInterval('reload()', 1000);
+
+    //no se debe ejecutar en mientras se consulta <=> otra ruta 
 
     function reload() {
 

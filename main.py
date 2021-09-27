@@ -1,10 +1,9 @@
-from flask import Flask, render_template, jsonify, g
+from flask import Flask, render_template, jsonify, g, request
 
-import socket, threading, pymysql, os 
+import socket, threading, pymysql, os, datetime
+from jinja2.environment import create_cache 
 
 app = Flask(__name__)
-
-print('CAMBIO DEFINITIVOOOO')
 
 
 def get_conn():
@@ -63,11 +62,30 @@ def get_data():
         return jsonify(datos)
 
 
-#Esto es un cambio
+#Request.arg.query
+"""@app.route('/historicos')
+def get_history():
+    init_date = request.args.get("param1")
+    final_date = request.args.get("param2")
+    init_day = datetime.init_date
+    fin_day = datetime.init_date
+    init_hour = datetime.init_date
+    fin_hour = datetime.init_date
+
+    conn, cur = get_conn()
+    cur=conn.cursor()
+    
+    cur.execute("SELECT * FROM datos WHERE Fecha BETWEEN '"+init_day+"' AND '"+fin_day+"' AND Hora BETWEEN '"+init_hour+"' AND '"+fin_hour+"'")
+    conn.commit() #si lo quito no sirve
+    datos = cur.fetchall()
+    return jsonify(datos)"""
+
+
+
+
 
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
-    print('FUNCIONA EL PULL con diana?')
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
     return 'hello'
 
