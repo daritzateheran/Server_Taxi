@@ -5,6 +5,8 @@ import socket, threading, pymysql, os
 app = Flask(__name__)
 
 print('ESTE ES UN GRAN CAMBIO PARA MASTER, QUE HACE DARITZA')
+print('ESTE ES UN GRAN CAMBIO PARA MASTER, QUE HACE DARITZA, se refleja en diana?')
+
 
 def get_conn():
     if "conn" not in g:
