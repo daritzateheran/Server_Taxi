@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, g, request
+from datetime import datetime
 
-import socket, threading, pymysql, os, datetime
+import socket, threading, pymysql, os, json
 from jinja2.environment import create_cache 
 
 app = Flask(__name__)
@@ -18,6 +19,8 @@ def get_conn():
     return g.conn, g.cur
 
 #comentario
+
+
 
 def udp():
     conn = pymysql.connect(
@@ -41,14 +44,20 @@ def udp():
             print (f"La direccion IP del emisor: {adrrs}")
             print (f"El mensaje recibido es: {msg}")
             arr = msg.split(",")
-            cur.execute("INSERT INTO datos (Latitud, Longitud, Fecha, Hora) VALUES (%s,%s,%s,%s)", (arr[1],arr[2],arr[3],arr[4]+arr[5]))
-            conn.commit()   
+            dt=arr[4]+ " " +arr[3]
+            cur.execute("INSERT INTO datos (Latitud, Longitud, Fhora) VALUES (%s,%s,%s)", (arr[1],arr[2],dt))
+            conn.commit()
     except:
         pass
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/historial')
+def historial():
+    return render_template('Historial.html')
+
 
 @app.route('/sqldata')
 def get_data():
@@ -58,8 +67,15 @@ def get_data():
         conn.commit() #si lo quito no sirve
         datos = cur.fetchall()
         cur.close()
-        print (datos)
-        return jsonify(datos)
+    
+        def datetime_handler(x):
+            if isinstance(x, (datetime,datetime)):
+                return x.isoformat()
+            raise TypeError("Unknown type")
+        var1 = json.dumps(datos, default=datetime_handler)
+        
+        print(var1)
+        return var1
 
 
 #Request.arg.query
@@ -80,7 +96,9 @@ def get_history():
     datos = cur.fetchall()
     return jsonify(datos)"""
 
-#CAMBIO SIRVE PLSS
+
+
+
 
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
