@@ -80,9 +80,7 @@ def get_history():
     datos = cur.fetchall()
     return jsonify(datos)"""
 
-
-
-
+#CAMBIO SIRVE PLSS
 
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
