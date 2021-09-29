@@ -17,7 +17,8 @@ def get_conn():
         )
         g.cur=g.conn.cursor()
     return g.conn, g.cur
-
+#jajajajajaaj ya estoy dentro perr@s
+#toma lo tuyo
 def udp():
     conn = pymysql.connect(
             host=os.environ['FLASK_DATABASE_HOST'],
