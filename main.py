@@ -98,7 +98,7 @@ def get_history():
 
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
-    os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull')
+    os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull') #esta linea de codigo hace que sea automatico el cambio del codigo si todas las instancias estan prendidas
     return 'hello'
 
 
