@@ -63,44 +63,33 @@ def get_data():
         conn.commit() #si lo quito no sirve
         datos = cur.fetchall()
         cur.close()
-    
+        
         def datetime_handler(x):
             if isinstance(x, (datetime,datetime)):
                 return x.isoformat()
             raise TypeError("Unknown type")
         var1 = json.dumps(datos, default=datetime_handler)
         
-        print(var1)
         return var1
 
-
 #Request.arg.query
-"""@app.route('/historicos')
+@app.route('/historicos')
 def get_history():
     init_date = request.args.get("param1")
     final_date = request.args.get("param2")
-    init_day = datetime.init_date
-    fin_day = datetime.init_date
-    init_hour = datetime.init_date
-    fin_hour = datetime.init_date
-
+    
     conn, cur = get_conn()
     cur=conn.cursor()
     
-    cur.execute("SELECT * FROM datos WHERE Fecha BETWEEN '"+init_day+"' AND '"+fin_day+"' AND Hora BETWEEN '"+init_hour+"' AND '"+fin_hour+"'")
+    cur.execute("SELECT * FROM taxiapp.datos WHERE FHora between '"+ init_date +"' AND '"+ final_date +"'")
     conn.commit() #si lo quito no sirve
     datos = cur.fetchall()
-    return jsonify(datos)"""
-
-
-
-
+    return jsonify(datos)
 
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull') #esta linea de codigo hace que sea automatico el cambio del codigo si todas las instancias estan prendidas
     return 'hello'
-
 
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)
