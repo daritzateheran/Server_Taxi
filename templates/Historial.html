@@ -111,6 +111,7 @@ crossorigin=""></script>
                 
                 //polilinea
                 var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
+                polilineas.push(polyline);
             }
             else {
                 console.log("Ready state", httpH.readyState);
