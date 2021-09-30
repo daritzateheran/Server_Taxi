@@ -103,7 +103,8 @@ crossorigin=""></script>
                     ruta.push([rutahist[i][1], rutahist[i][2]])
                 }
                 //polilinea
-                var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
+                var polyline = L.polyline([0,0], {color: 'blue'}).addTo(mymap);
+                polyline.setLatLng(ruta)
             }
             else {
                 console.log("Ready state", httpH.readyState);
