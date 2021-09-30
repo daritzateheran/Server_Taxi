@@ -25,6 +25,7 @@ crossorigin=""></script>
         <div class="container">
             <img class="imagen"
                 src="../static/taxi1.png">
+            <a href="{{ url_for('historial') }}">Historial</a>
             <div class="mostrar-info">
                 <p class="informacion labels">Latitud:</p>
                 <p class="informacion" id="latitud"></p><br>
@@ -35,7 +36,6 @@ crossorigin=""></script>
                 <p class="informacion labels">Fecha: </p>
                 <p class="informacion" id="hora"></p>
             </div>
-            <a href="{{ url_for('historial') }}">Historial</a>
         </div>
 
         <div id="TaxiMap" class="mapa"></div>

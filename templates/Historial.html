@@ -70,6 +70,7 @@ crossorigin=""></script>
     var initialdate = document.getElementById('initialdate');
     var finaldate = document.getElementById('finaldate');
     var polilineas = new Array();
+    x=1;
     //http request escuchando el boton del usuario, aquí pon la parte del boton
 
     historybutton.addEventListener('click', consulta);
@@ -80,7 +81,17 @@ crossorigin=""></script>
         var param1 = initialdate.value
         var param2 = finaldate.value
 
-        console.log(param1);
+        if( param1 > param2){
+            alert("La opción es invalida");
+            x=0;
+        }
+
+        var fecha = new Date();
+        if(param2>fecha.toISOString()){
+            alert("Fecha final es invalida");
+            x=0;
+        }
+        
 
         httpH.open('GET', "/historicos?param1=" + param1 + "&param2=" + param2)
         httpH.onreadystatechange = function(){
@@ -110,8 +121,12 @@ crossorigin=""></script>
                 }
                 
                 //polilinea
+                if(ruta==false && x!= 0){
+                    alert("No existe recorrido para este rango de fechas");
+                }
                 var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
                 polilineas.push(polyline);
+                x=1;
             }
             else {
                 console.log("Ready state", httpH.readyState);
