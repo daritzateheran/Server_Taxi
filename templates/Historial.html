@@ -69,11 +69,11 @@ crossorigin=""></script>
     const historybutton = document.getElementById('requestbutton');
     var initialdate = document.getElementById('initialdate');
     var finaldate = document.getElementById('finaldate');
-    
+    var polilineas = new Array();
     //http request escuchando el boton del usuario, aquí pon la parte del boton
 
     historybutton.addEventListener('click', consulta);
-    var polyline = L.polyline([["0","0"]], {color: 'blue'}).addTo(mymap);
+    
     function consulta(){
 
         const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
@@ -102,11 +102,16 @@ crossorigin=""></script>
                     console.log(rutahist[i][1])
                     ruta.push([rutahist[i][1], rutahist[i][2]])
                 }
-                //polilinea
+                //eliminar la polilinea
+                if (polilineas){
+                    for (var line of polilineas){
+                        mymap.removeLeyer(line);
+                     }   
+                }
                 
-                polyline.setLatLng([ruta])
+                //polilinea
+                var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
             }
-
             else {
                 console.log("Ready state", httpH.readyState);
                 console.log("Ready status", httpH.status);
