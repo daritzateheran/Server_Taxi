@@ -73,7 +73,7 @@ crossorigin=""></script>
     //http request escuchando el boton del usuario, aquí pon la parte del boton
 
     historybutton.addEventListener('click', consulta);
-    var polyline = L.polyline([0,0], {color: 'blue'}).addTo(mymap);
+    var polyline = L.polyline([["0","0"]], {color: 'blue'}).addTo(mymap);
     function consulta(){
 
         const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
@@ -104,7 +104,7 @@ crossorigin=""></script>
                 }
                 //polilinea
                 
-                polyline.setLatLng(ruta)
+                polyline.setLatLng([ruta])
             }
 
             else {
