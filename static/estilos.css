@@ -1,10 +1,12 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Merriweather', serif;
 }
 body {
     max-height: 100vh;
     background-color: rgb(253, 253, 120);
+    zoom: 85%;
 }
 .text-footer {
     color: black;
@@ -40,9 +42,10 @@ body {
     margin: 0 10px;
     background-color: rgb(238, 238, 238);
     border-radius: 5px;
+    position: relative;
 }
 .imagen {
-    width: 250px;
+    width: 180px;
     margin: 5px auto;
 }
 .mostrar-info {
@@ -54,7 +57,7 @@ body {
     width: 80px;
     margin-right: 130px;
     margin-left: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 .mapa {
     display: inline-block;
@@ -63,4 +66,14 @@ body {
     margin: 0;
     margin-bottom: 50px;
     border-radius: 5px;
+}
+.link {
+    text-decoration: none;
+    background-color: midnightblue;
+    color: whitesmoke;
+    padding: 5px;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    border-radius: 3px;
 }

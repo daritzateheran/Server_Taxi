@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital@1&display=swap" rel="stylesheet">
 </head>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
@@ -23,9 +26,8 @@ crossorigin=""></script>
     <h1 id="titulo1">Ubicación GPS</h1>
     <div class="container1">
         <div class="container">
-            <img class="imagen"
-                src="../static/taxi1.png">
-            <a href="{{ url_for('historial') }}">Historial</a>
+            <a href="{{ url_for('historial') }}" class="link">Historial</a>
+            <img class="imagen" src="../static/taxi1.png">
             <div class="mostrar-info">
                 <p class="informacion labels">Latitud:</p>
                 <p class="informacion" id="latitud"></p><br>
@@ -36,6 +38,7 @@ crossorigin=""></script>
                 <p class="informacion labels">Fecha: </p>
                 <p class="informacion" id="hora"></p>
             </div>
+            <button class="link" style="margin-left: 300px; cursor: pointer;">Centrar mapa</button>
         </div>
 
         <div id="TaxiMap" class="mapa"></div>

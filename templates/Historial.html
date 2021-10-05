@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
     crossorigin=""/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital@1&display=swap" rel="stylesheet">
 </head>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
@@ -24,17 +27,14 @@ crossorigin=""></script>
     
     <div class="container1">
         <div class="container">
-            <a href="{{ url_for('index') }}">Home</a>
-            <div style="margin: 20px 0; margin-left: 15px;">
-                <label for="fechaInicial">Fecha Inicial:</label>
-                <label for="fechaFinal" style="margin-left: 85px;">Fecha Final:</label>
-            </div>
-            <div id="form" style="margin-left: 15px;">
-                <input type="datetime-local" style="display: inline-block; width: 170px;" id="initialdate">
-                <input type="datetime-local" style="display: inline-block; width: 170px;" id="finaldate">
-                <button id = "requestbutton" style="display: block; margin-top: 20px; padding: 5px;">Consultar</button>
-            </div>
-            
+            <a href="{{ url_for('index') }}" class="link">Home</a>
+            <label for="fechaInicial" style="margin: 15px 10px;">Fecha Inicial:</label>
+            <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 20px;" id="initialdate">
+            <label for="fechaFinal" style="margin: 15px 10px;">Fecha Final:</label>         
+            <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 20px;" id="finaldate">
+            <button id = "requestbutton" style="display: block; margin: 30px 50px; padding: 8px; width: 250px; cursor: pointer;">Consultar</button>
+            <button class="link" style="position: absolute; bottom: 0; right: 0; cursor: pointer;">Centrar mapa</button>
+
         </div>
 
         <div id="TaxiMap" class="mapa"></div>
