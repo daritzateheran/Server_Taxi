@@ -29,12 +29,12 @@ crossorigin=""></script>
         <div class="container">
             <a href="{{ url_for('index') }}" class="link">Home</a>
             <label for="fechaInicial" style="margin: 15px 10px;">Fecha Inicial:</label>
-            <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 20px;" id="initialdate">
+            <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 20px;" id="initialdate" onchange="enlazamientodefechas(this)">
             <label for="fechaFinal" style="margin: 15px 10px;">Fecha Final:</label>         
-            <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 20px;" id="finaldate">
+            <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 20px;" id="finaldate" onchange="enlazamientodefechas1(this)">
             <button id = "requestbutton" style="display: block; margin: 30px 50px; padding: 8px; width: 250px; cursor: pointer;">Consultar</button>
             <button class="link" style="position: absolute; bottom: 0; right: 0; cursor: pointer;">Centrar mapa</button>
-
+       
         </div>
 
         <div id="TaxiMap" class="mapa"></div>
@@ -44,7 +44,7 @@ crossorigin=""></script>
         <p class="text-footer">© 2021 Copyright: <a class="link-footer" href="https://mdbootstrap.com/">www.LosTaxisDelTio.com</a></p>
     </footer>
 </body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script type="text/javascript"> 
 
     var ruta = new Array()
@@ -63,16 +63,27 @@ crossorigin=""></script>
     tiles.addTo(mymap);
     let marker = L.marker([0, 0], {icon: customIcon}).addTo(mymap);
     let inicio = L.marker([0, 0]).addTo(mymap);
-
+    
     // SELECCIONAR ELEMENTOS DEL HTML
-
     const historybutton = document.getElementById('requestbutton');
     var initialdate = document.getElementById('initialdate');
     var finaldate = document.getElementById('finaldate');
-    var polilineas = new Array();
+       var polilineas = new Array();
     x=1;
-    //http request escuchando el boton del usuario, aquí pon la parte del boton
+    function enlazamientodefechas (fecha1){
+        finaldate.min= fecha1.value
+    }
+    function enlazamientodefechas1 (fecha2){
+        initialdate.max= fecha2.value
+    }
 
+    //http request escuchando el boton del usuario, aquí pon la parte del boton
+    document.addEventListener('DOMContentLoaded', reset);
+    function reset(){
+      var  hoy= new moment()
+     initialdate.value= hoy.format("YYYY-MM-DDTHH:mm")
+     finaldate.value= hoy.format("YYYY-MM-DDTHH:mm")
+    }
     historybutton.addEventListener('click', consulta);
     
     function consulta(){
@@ -137,5 +148,4 @@ crossorigin=""></script>
     }
     
 </script>
-
 </html>
