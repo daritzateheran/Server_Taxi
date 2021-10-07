@@ -5,68 +5,76 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        Empresa de Taxis
-    </title>
-    <link rel="stylesheet" href="../static/estilos.css">
-
+    <title>TAXI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin=""/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital@1&display=swap" rel="stylesheet">
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <style>
+        .grid-p {
+            display: grid;
+            grid-template-columns: 30% 70%;
+        }
+
+        .mapa {
+            width: 100%;
+            height: 520px;
+            margin: 0;
+            margin-bottom: 50px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-crossorigin=""></script>
-
 <body>
-    <h1 id="titulo1">Ubicación GPS</h1>
-    <div class="container1">
-        <div class="container">
-            <a href="{{ url_for('historial') }}" class="link">Historial</a>
-            <img class="imagen" src="../static/taxi1.png">
-            <div class="mostrar-info">
-                <p class="informacion labels">Latitud:</p>
-                <p class="informacion" id="latitud"></p><br>
-                <p class="informacion labels">Longitud: </p>
-                <p class="informacion" id="longitud"></p><br>
-                <p class="informacion labels">Hora: </p>
-                <p class="informacion" id="fecha"></p><br>
-                <p class="informacion labels">Fecha: </p>
-                <p class="informacion" id="hora"></p>
-            </div>
-            <button class="link" style="margin-left: 300px; cursor: pointer;">Centrar mapa</button>
+    {% include "nav-bar.html" %}
+
+    <div class="grid-p">
+        <div class="box">
+            <p class="title is-4">Latitud:</p>
+            <p id="latitud"></p><br>
+            <p class="title is-4">Longitud: </p>
+            <p id="longitud"></p><br>
+            <p class="title is-4">Hora: </p>
+            <p id="fecha"></p><br>
+            <p class="title is-4">Fecha: </p>
+            <p id="hora"></p>
         </div>
-
         <div id="TaxiMap" class="mapa"></div>
-        
-
     </div>
-    <footer class="footer">
-        <p class="text-footer">© 2021 Copyright: <a class="link-footer" href="https://mdbootstrap.com/">www.LosTaxisDelTio.com</a></p>
-    </footer>
-</body>
 
-<script type="text/javascript"> 
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>© 2021 Copyright</strong> www.LosTaxisDelTio.com
+            </p>
+        </div>
+    </footer>
+
+</body>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin="">
+    </script>
+
+<script type="text/javascript">
 
     var ruta = new Array()
     var x = 1;
     var customIcon = new L.Icon({
         iconUrl: 'https://cdn-icons-png.flaticon.com/512/4214/4214491.png',
         iconSize: [50, 50],
-        iconAnchor: [25,25]
+        iconAnchor: [25, 25]
     });
-    const mymap = L.map('TaxiMap').setView([10.968638,-74.806644,], 14);
+    const mymap = L.map('TaxiMap').setView([10.968638, -74.806644,], 14);
     const attribution =
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
     const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
     const tiles = L.tileLayer(tileUrl, { attribution });
     tiles.addTo(mymap);
-    let marker = L.marker([0, 0], {icon: customIcon}).addTo(mymap);
+    let marker = L.marker([0, 0], { icon: customIcon }).addTo(mymap);
     let inicio = L.marker([0, 0]).addTo(mymap);
 
     // SELECCIONAR ELEMENTOS DEL HTML
@@ -74,7 +82,7 @@ crossorigin=""></script>
     const changelong = document.querySelector('#longitud');
     const changetime = document.querySelector('#fecha');
     const changehour = document.querySelector('#hora');
-  
+
     setInterval('reload()', 1000);
 
     //no se debe ejecutar en mientras se consulta <=> otra ruta 
@@ -82,15 +90,15 @@ crossorigin=""></script>
     function reload() {
 
         const http = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
-        http.open('GET', "/sqldata")
-        http.onreadystatechange = function(){
-            if (http.readyState == 4 && http.status == 200){
+        http.open('GET', "/<placa>/sqldata")
+        http.onreadystatechange = function () {
+            if (http.readyState == 4 && http.status == 200) {
                 var sqld = http.responseText;
                 sqld = JSON.parse(sqld);
-                Fdate=sqld[0][3].split("T")
-                if (x==1){
+                Fdate = sqld[0][3].split("T")
+                if (x == 1) {
                     inicio.setLatLng([sqld[0][1], sqld[0][2]]);
-                    x=0;
+                    x = 0;
                 }
 
                 // modificar campos de html, hacer el link
@@ -98,12 +106,12 @@ crossorigin=""></script>
                 changelong.innerHTML = `${sqld[0][2]}`
                 changetime.innerHTML = `${Fdate[1]}`
                 changehour.innerHTML = `${Fdate[0]}`
-                
-                mymap.setView([sqld[0][1],sqld[0][2]], mymap.getZoom());
+
+                mymap.setView([sqld[0][1], sqld[0][2]], mymap.getZoom());
                 //Polilinea.
-                var loc = [sqld[0][1],sqld[0][2]];
+                var loc = [sqld[0][1], sqld[0][2]];
                 ruta.push(loc);
-                var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
+                var polyline = L.polyline(ruta, { color: 'blue' }).addTo(mymap);
 
 
                 marker.setLatLng([sqld[0][1], sqld[0][2]]);

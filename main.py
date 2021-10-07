@@ -1,10 +1,12 @@
-from flask import Flask, render_template, jsonify, g, request
+from json import encoder
+from flask import Flask, render_template, jsonify, g, request, session, url_for, redirect
 from datetime import datetime
-
 import socket, threading, pymysql, os, json
-from jinja2.environment import create_cache 
 
+
+# server config
 app = Flask(__name__)
+app.secret_key = str(os.urandom(256))
 
 
 def get_conn():
@@ -20,10 +22,10 @@ def get_conn():
 
 def udp():
     conn = pymysql.connect(
-            host=os.environ['FLASK_DATABASE_HOST'],
-            user=os.environ['FLASK_DATABASE_USER'],
+            database=os.environ['FLASK_DATABASE'],
             password=os.environ['FLASK_DATABASE_PASSWORD'],
-            database=os.environ['FLASK_DATABASE']
+            user=os.environ['FLASK_DATABASE_USER'],
+            host=os.environ['FLASK_DATABASE_HOST'],        
         )
     cur=conn.cursor()
     try:
@@ -41,25 +43,30 @@ def udp():
             print (f"El mensaje recibido es: {msg}")
             arr = msg.split(",")
             dt=arr[4]+ " " +arr[3]
-            cur.execute("INSERT INTO datos (Latitud, Longitud, Fhora) VALUES (%s,%s,%s)", (arr[1],arr[2],dt))
-            conn.commit()
+            placa=arr[6]
+            print (placa)
+            cur.execute(f"INSERT INTO {placa} (Latitud, Longitud, Fhora) VALUES (%s,%s,%s)", (arr[1],arr[2],dt))
+            conn.commit()          
     except:
         pass
 
-@app.route('/')
-def index():
-    return render_template('index.html')
 
-@app.route('/historial')
-def historial():
-    return render_template('Historial.html')
+# api
+
+# login
+@app.before_request
+def before():
+    url = request.path
+    if not 'placa' in session and url != '/login' and url != "/registrar" and url != "/logout" and not url.startswith("/static"):
+        return redirect('/login')
 
 
-@app.route('/sqldata')
-def get_data():
+@app.route('/<placa>/sqldata')
+def get_data(placa:str=""):
+        placa = session.get('placa', None)
         conn, cur = get_conn()
         cur=conn.cursor()
-        cur.execute("SELECT * FROM datos WHERE Id = (SELECT MAX(Id) FROM datos)")
+        cur.execute(f"SELECT * FROM {placa} WHERE Id = (SELECT MAX(Id) FROM {placa})")
         conn.commit() #si lo quito no sirve
         datos = cur.fetchall()
         cur.close()
@@ -69,39 +76,97 @@ def get_data():
                 return x.isoformat()
             raise TypeError("Unknown type")
         var1 = json.dumps(datos, default=datetime_handler)
-        
         return var1
 
-#Request.arg.query
-@app.route('/historicos')
-def get_history():
+@app.route('/<placa>/historicos')
+def get_history(placa:str=""):
+    placa = session.get('placa', None)
     init_date = request.args.get("param1")
     final_date = request.args.get("param2")
     
     conn, cur = get_conn()
     cur=conn.cursor()
     
-    cur.execute("SELECT * FROM taxiapp.datos WHERE FHora between '"+ init_date +"' AND '"+ final_date +"'")
+    cur.execute(f"SELECT * FROM  {placa} WHERE FHora between '"+ init_date +"' AND '"+ final_date +"'")
     conn.commit() #si lo quito no sirve
     datos = cur.fetchall()
+    cur.close()
     return jsonify(datos)
 
 #enviar datos a app
-
-@app.route('/login')
-def login():
-    conn, cur = get_conn()
-    cur=conn.cursor()
-    cur.execute("SELECT * FROM taxiapp.login WHERE placa = 'GRS523' ")
-    conn.commit() #si lo quito no sirve
-    datos = cur.fetchall()
-    return jsonify(datos)
-
-
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull') #esta linea de codigo hace que sea automatico el cambio del codigo si todas las instancias estan prendidas
     return 'hello'
+
+
+# rutas
+
+@app.route('/<placa>/historial')
+def historial(placa:str=""):
+
+    if  placa == session['placa']:
+        return render_template('historial.html', text="Cerrar sesión", url="logout")
+
+
+# rutas principales
+
+@app.route('/registrar', methods = ["POST","GET"])
+def register():
+    if request.method == 'POST':
+        placa = request.form["placa"]
+        conn, cur = get_conn()
+        cur=conn.cursor()
+
+        cur.execute("Show tables;")
+        myresult = cur.fetchall()
+        cur.close()
+        
+        for i in range(len(myresult)):
+            if myresult[i][0] == placa:
+                return render_template("signup.html")
+        else: 
+            sql = f"CREATE TABLE {placa} (id INT AUTO_INCREMENT PRIMARY KEY, Latitud VARCHAR(15), Longitud VARCHAR(15), FHora DATETIME)"
+            conn, cur = get_conn()
+            cur=conn.cursor()
+            cur.execute(sql)
+            conn.commit() #si lo quito no sirve
+            cur.close()
+            return redirect('/login')
+    else:
+        return render_template("signup.html")
+        
+
+
+@app.route('/logout')
+def logout():
+    session.pop("placa", None)
+    return redirect("/login")
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        placa  = request.form['placa']
+        conn, cur = get_conn()
+        cur=conn.cursor()
+        cur.execute("Show tables;")
+        myresult = cur.fetchall()
+        cur.close()
+        
+        for i in range(len(myresult)):
+            if myresult[i][0] == placa:
+                session['placa'] = placa
+                return redirect(url_for("index", placa=placa))
+        else:
+            return render_template('buscar.html', text="Registrar")  
+    else:
+        return render_template('buscar.html', text="Registrar", url="registrar")
+
+@app.route('/')
+@app.route('/<placa>')
+def index(placa:str = ''):
+    if placa == session['placa']:
+        return render_template('index.html', text="Cerrar sesión", url="logout")
 
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)
