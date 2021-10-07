@@ -86,6 +86,18 @@ def get_history():
     datos = cur.fetchall()
     return jsonify(datos)
 
+#enviar datos a app
+
+@app.route('/login')
+def login():
+    conn, cur = get_conn()
+    cur=conn.cursor()
+    cur.execute("SELECT * FROM taxiapp.login WHERE placa = 'GRS523' ")
+    conn.commit() #si lo quito no sirve
+    datos = cur.fetchall()
+    return jsonify(datos)
+
+
 @app.route('/changes', methods=["POST","GET"]) #git hub
 def pull():
     os.system('cd /home/ubuntu/Server_Taxi && git reset --hard && git pull') #esta linea de codigo hace que sea automatico el cambio del codigo si todas las instancias estan prendidas
