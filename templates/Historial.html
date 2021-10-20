@@ -149,7 +149,6 @@ var ruta = new Array()
         }
         
 
-    
         httpH.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2)
         httpH.onreadystatechange = function(){
             if (httpH.readyState == 4 && httpH.status == 200){

@@ -147,6 +147,7 @@ def logout():
 def login():
     if request.method == 'POST':
         placa  = request.form['placa']
+        print(request.form["placas"])
         conn, cur = get_conn()
         cur=conn.cursor()
         cur.execute("Show tables;")
@@ -160,8 +161,20 @@ def login():
         else:
             return render_template('buscar.html', text="Registrar")  
     else:
-        return render_template('buscar.html', text="Registrar", url="registrar")
+        conn, cur = get_conn()
+        cur=conn.cursor()
+        cur.execute("SELECT * FROM placas;")
+        myresult = cur.fetchall()
+        cur.close()
+        print(myresult)
 
+        placas = [placa[1] for placa in myresult]
+        
+        #show tables 
+        return render_template('buscar.html', text="Registrar", url="registrar", placas= placas)
+
+
+#Enviar lista en vez de placa
 @app.route('/')
 @app.route('/<placa>')
 def index(placa:str = ''):
