@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -26,36 +28,55 @@
     </style>
 
 </head>
+
 <body>
     {% include "nav-bar.html" %}
-    
-    <div class="grid-p">
-            <div class="box">
-                <p class="title is-4">Fecha Inicial</p>
-                <p id="fechaInicial">
-                    <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 70px;" id="initialdate" onchange="enlazamientodefechas(this)">
-                </p><br>
-                <p class="title is-4">Fecha final: </p>
-                <p id="fechaFinal">
-                    <input type="datetime-local" style="display: inline-block; width: 250px; padding: 4px; margin-left: 70px;" id="finaldate" onchange="enlazamientodefechas1(this)">
-                </p><br>
 
-                <div class="columns">
-                    <div class="column">
-                        <div class="buttons">
-                            <button id = "requestbutton" class="button is-primary" type="submit">Consultar</button>
-                        </div>
+    <div class="grid-p">
+        <div class="box">
+            <p class="title is-4">Fecha Inicial</p>
+            <p id="fechaInicial">
+                <input type="datetime-local"
+                    style="display: inline-block; width: 250px; padding: 4px; margin-left: 70px;" id="initialdate"
+                    onchange="enlazamientodefechas(this)">
+            </p><br>
+            <p class="title is-4">Fecha final: </p>
+            <p id="fechaFinal">
+                <input type="datetime-local"
+                    style="display: inline-block; width: 250px; padding: 4px; margin-left: 70px;" id="finaldate"
+                    onchange="enlazamientodefechas1(this)">
+            </p><br>
+
+
+            <div class="columns">
+                <div class="column">
+                    <div class="buttons">
+                        <button id="requestbutton" class="button is-primary" type="submit">Consultar</button>
                     </div>
+                </div>
+
+
+
 
                 <!--<div class="column">
                         <div class="buttons">
                             <button id = "centermap" class="button is-primary" type="submit">Centrar mapa</button>
                         </div>
                     </div>-->
-                   
-                </div>
+
+            </div>
+
+            <div class="box">
+                <p class="title is-5">Paso a paso</p>
+                <p>Total registros: <p id="rgt">0</p></p>
+                <input type="range" value="0" id="slider" min="0" max="1" onchange="update(this.value);">
+                
+            </div>
+
         </div>
+
         <div id="TaxiMap" class="mapa"></div>
+
     </div>
 
     <footer class="footer">
@@ -69,129 +90,13 @@
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.5.0/nouislider.min.js"></script>
 
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin="">
     </script>
 
-<script type="text/javascript">
+<script  src="../static/js/historial.js"></script>
 
-var ruta = new Array()
-    var x = 1;
-    var customIcon = new L.Icon({
-        iconUrl: 'https://cdn-icons-png.flaticon.com/512/4214/4214491.png',
-        iconSize: [50, 50],
-        iconAnchor: [25,25]
-    });
-    const mymap = L.map('TaxiMap').setView([10.968638,-74.806644,], 14);
-    const attribution =
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-    const tiles = L.tileLayer(tileUrl, { attribution });
-    tiles.addTo(mymap);
-    let marker;
-    let inicio;
-    
-    // SELECCIONAR ELEMENTOS DEL HTML
-    const historybutton = document.getElementById('requestbutton');
-    //const centerm = document.getElementById('centermap');
-
-    var initialdate = document.getElementById('initialdate');
-    var finaldate = document.getElementById('finaldate');
-       var polilineas = new Array();
-    x=1;
-    function enlazamientodefechas (fecha1){
-        finaldate.min= fecha1.value
-    }
-    function enlazamientodefechas1 (fecha2){
-        initialdate.max= fecha2.value
-    }
-
-    //http request escuchando el boton del usuario, aquí pon la parte del boton
-    document.addEventListener('DOMContentLoaded', reset);
-    function reset(){
-      var  hoy= new moment()
-     initialdate.value= hoy.format("YYYY-MM-DDTHH:mm")
-     finaldate.value= hoy.format("YYYY-MM-DDTHH:mm")
-     initialdate.max=hoy.format("YYYY-MM-DDTHH:mm")
-     finaldate.max=hoy.format("YYYY-MM-DDTHH:mm")
-
-    }
-    historybutton.addEventListener('click', consulta);
-    centerm.addEventListener('click', center);
-    
-    /*a=10.968638;
-    b=-74.806644;
-    function center(){
-      if (a && b != 0){
-            mymap.setView([a, b], mymap.getZoom());
-        }
-    }*/
-
-
-    function consulta(){
-
-        const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
-        var param1 = initialdate.value
-        var param2 = finaldate.value
-
-        if( param1 > param2){
-            alert("La opción es inválida");
-            x=0;
-        }
-
-        var fecha = new Date();
-        if(param2>fecha.toISOString()){
-            alert("Fecha final es inválida");
-            x=0;
-        }
-        
-
-        httpH.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2)
-        httpH.onreadystatechange = function(){
-            if (httpH.readyState == 4 && httpH.status == 200){
-                var rutahist = httpH.responseText;
-                rutahist = JSON.parse(rutahist);
-                
-                var ruta = new Array()
-                for(var i = 0; i<rutahist.length; i++){
-                    
-                    if(i== 0){
-                        inicio= L.marker([rutahist[i][1], rutahist[i][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido').openPopup();
-
-                    }
-                    if(i== rutahist.length - 1){
-                        marker  = L.marker([rutahist[i][1], rutahist[i][2]], {icon: customIcon}).addTo(mymap).bindPopup('Final del recorrido').openPopup();
-                        mymap.setView([rutahist[i][1], rutahist[i][2]], 14);
-                    }
-
-                    //console.log(rutahist[i][1])
-                    ruta.push([rutahist[i][1], rutahist[i][2]])
-                }
-                //eliminar la polilinea
-                if (polilineas){
-                    for (var line of polilineas){
-                        mymap.removeLayer(line);
-                     }   
-                }
-                
-                //polilinea
-                if(ruta==false && x!= 0){
-                    alert("No existe recorrido para este rango de fechas");
-                }
-                var polyline = L.polyline(ruta, {color: 'blue'}).addTo(mymap);
-                polilineas.push(polyline);
-                x=1;
-            }
-            else {
-                console.log("Ready state", httpH.readyState);
-                console.log("Ready status", httpH.status);
-            }
-        }
-        httpH.send(null);
-    }
-</script>
-    
 </html>

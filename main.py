@@ -12,20 +12,20 @@ app.secret_key = str(os.urandom(256))
 def get_conn():
     if "conn" not in g:
         g.conn = pymysql.connect(
-            host=os.environ['FLASK_DATABASE_HOST'],
-            user=os.environ['FLASK_DATABASE_USER'],
-            password=os.environ['FLASK_DATABASE_PASSWORD'],
-            database=os.environ['FLASK_DATABASE']
+            host=os.getenv('FLASK_DATABASE_HOST'),
+            user=os.getenv('FLASK_DATABASE_USER'),
+            password=os.getenv('FLASK_DATABASE_PASSWORD'),
+            database=os.getenv('FLASK_DATABASE')
         )
         g.cur=g.conn.cursor()
     return g.conn, g.cur
 
 def udp():
     conn = pymysql.connect(
-            database=os.environ['FLASK_DATABASE'],
-            password=os.environ['FLASK_DATABASE_PASSWORD'],
-            user=os.environ['FLASK_DATABASE_USER'],
-            host=os.environ['FLASK_DATABASE_HOST'],        
+            host=os.getenv('FLASK_DATABASE_HOST'),
+            user=os.getenv('FLASK_DATABASE_USER'),
+            password=os.getenv('FLASK_DATABASE_PASSWORD'),
+            database=os.getenv('FLASK_DATABASE')
         )
     cur=conn.cursor()
     try:
@@ -57,7 +57,7 @@ def udp():
 @app.before_request
 def before():
     url = request.path
-    if not 'placa' in session and url != '/login' and url != "/registrar" and url != "/logout" and not url.startswith("/static"):
+    if not 'placa' in session and url != '/login' and url != "/registrar" and url != "/multiples" and not url.startswith("/static"):
         return redirect('/login')
 
 
@@ -106,7 +106,7 @@ def pull():
 def historial(placa:str=""):
 
     if  placa == session['placa']:
-        return render_template('Historial.html', text="Cerrar sesión", url="logout")
+        return render_template('historial.html', text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="")
 
 
 # rutas principales
@@ -136,7 +136,10 @@ def register():
     else:
         return render_template("signup.html")
         
+@app.route('/multiples')
+def multiples():
 
+    return render_template("multiples.html")
 
 @app.route('/logout')
 def logout():
@@ -147,7 +150,7 @@ def logout():
 def login():
     if request.method == 'POST':
         placa  = request.form['placa']
-        print(request.form["placas"])
+        #print(request.form["placas"])
         conn, cur = get_conn()
         cur=conn.cursor()
         cur.execute("Show tables;")
@@ -171,15 +174,19 @@ def login():
         placas = [placa[1] for placa in myresult]
         
         #show tables 
-        return render_template('buscar.html', text="Registrar", url="registrar", placas= placas)
-
+        return render_template('buscar.html', text="Registrar", url="registrar", texto_1="MULTI USUARIOS", texto_2="", placas=placas)
 
 #Enviar lista en vez de placa
 @app.route('/')
 @app.route('/<placa>')
 def index(placa:str = ''):
     if placa == session['placa']:
-        return render_template('index.html', text="Cerrar sesión", url="logout")
+        return render_template('index.html', text="Cerrar sesión", url="logout", texto_1="", texto_2="Historial")
+    return "Placa invalida"
+        
+        
+
+
 
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)
