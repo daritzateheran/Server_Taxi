@@ -104,6 +104,7 @@ def get_data(placa:str=""):
         var1 = json.dumps(datos, default=datetime_handler)
         return var1
 
+
 @app.route('/<placa>/historicos')
 def get_history(placa:str=""):
     placa = session.get('placa', None)
