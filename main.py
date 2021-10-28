@@ -132,7 +132,7 @@ def pull():
 def historial(placa:str=""):
 
     if  placa == session['placa']:
-        return render_template('historial.html', text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="")
+        return render_template('Historial.html', text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="")
 
 
 # rutas principales
