@@ -31,6 +31,8 @@ const historybutton = document.getElementById('requestbutton');
 var initialdate = document.getElementById('initialdate');
 var finaldate = document.getElementById('finaldate');
 var polilineas = new Array();
+var marker_remove = new Array();
+
 x = 1;
 function enlazamientodefechas(fecha1) {
     finaldate.min = fecha1.value
@@ -53,7 +55,7 @@ historybutton.addEventListener('click', consulta);
 
 function consulta() {
 
-    const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
+    
     var param1 = initialdate.value
     var param2 = finaldate.value
 
@@ -69,7 +71,7 @@ function consulta() {
     }
 
 
-
+    const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
     httpH.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2)
     httpH.onreadystatechange = () => {
         if (httpH.readyState == 4 && httpH.status == 200) {
@@ -87,7 +89,7 @@ function consulta() {
                 }
 
                 //console.log(rutahist[i][1])
-                ruta.push([rutahist[i][1], rutahist[i][2]])
+                ruta.push([rutahist[i][1], rutahist[i][2]]);
             }
             //eliminar la polilinea
             if (polilineas) {
@@ -95,6 +97,7 @@ function consulta() {
                     mymap.removeLayer(line);
                 }
             }
+            polilineas=[];
 
             //polilinea
             if (ruta == false && x != 0) {
@@ -123,12 +126,13 @@ function consulta() {
 function update(p) {
 
     const http = new XMLHttpRequest()
-    var param1 = initialdate.value
-    var param2 = finaldate.value
+    var param1 = initialdate.value;
+    var param2 = finaldate.value;
     http.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2);
     http.onload =  () => {
         if (http.status == 200) {
             let data = JSON.parse(http.responseText);
+           
 
             if (p == 0) {
                 if (polilineas) {
@@ -138,10 +142,17 @@ function update(p) {
                 }
                 inicio = L.marker([data[p][0], data[0][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido').openPopup();
             } else {
+                console.log(p);
+                if (marker_remove) {
+                    for (var mark of marker_remove) {
+                        mymap.removeLayer(mark);
+                    }
+                }
+                marker_remove=[];
                 marker = L.marker([data[p][1], data[p][2]], { icon: customIcon2 }).addTo(mymap).bindPopup(data[p][3]).openPopup();
                 mymap.setView([data[p][1], data[p][2]], 14);
+                marker_remove.push(marker);
             }
-
         }
     }
 

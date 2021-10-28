@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAXI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <style>
+        .grid-p {
+            display: grid;
+            grid-template-columns: 30% 70%;
+        }
+
+        .mapa {
+            width: 100%;
+            height: 520px;
+            margin: 0;
+            margin-bottom: 50px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include "nav-bar.html" %}
+
+    <div class="grid-p">
+        <div class="box">
+
+            <div class="field">
+                <input type="checkbox" id="TLO847" name = "1" onclick="myFunction(this)">
+                <label for="1"> TLO847 </label>
+            </div>
+
+            <div class="field">
+                <input type="checkbox" id="WPB289" name = "3" onclick="myFunction(this)">
+                <label for="3">WPB289</label>
+
+            </div>
+
+            
+            <div class="field">
+                <input type="checkbox" id="TRU189" name = "2" onclick="myFunction(this)">
+                <label for="2">TRU189</label>
+
+            </div>
+            
+            
+        </div>
+            
+            
+    </div>
+        <div id="TaxiMap" class="mapa"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>© 2021 Copyright</strong> www.LosTaxisDelTio.com
+            </p>
+        </div>
+    </footer>
+
+</body>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin="">
+    </script>
+
+<script type="text/javascript">
+
+    var mult = new Array();
+    var ruta = new Array();
+    var marker_remove = new Array();
+
+    var x = 1;
+    var customIcon = new L.Icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/4214/4214491.png',
+        iconSize: [50, 50],
+        iconAnchor: [25, 25]
+    });
+    const mymap = L.map('TaxiMap').setView([10.968638, -74.806644,], 14);
+    const attribution =
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+    const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+    const tiles = L.tileLayer(tileUrl, { attribution });
+    tiles.addTo(mymap);
+    //let marker = L.marker([0, 0], { icon: customIcon }).addTo(mymap);
+    let inicio = L.marker([0, 0]).addTo(mymap);
+
+    
+
+
+
+
+    setInterval('reload()', 1000);
+
+    //no se debe ejecutar en mientras se consulta <=> otra ruta 
+    
+
+    function reload() {
+
+        
+        for(var i=0;i<search.length; i++){
+
+            for (var mark of marker_remove){
+                mymap.removeLayer(mark);
+            }
+            marker_remove=[];
+
+
+            const http = new XMLHttpRequest();
+            http.open('GET', "/sqlplaca?placa=" + search[i]);
+            http.onreadystatechange = function () {
+                if (http.readyState == 4 && http.status == 200) {
+                    var sqld = http.responseText;
+                    //console.log(search[i],sqld)
+                    sqld = JSON.parse(sqld);
+
+                    if (mult[i]){
+                        mult[i].push([sqld[0][1], sqld[0][2]]);
+                    }
+                    else{
+                        mult.push([[sqld[0][1], sqld[0][2]]])
+                    }
+                    
+                    console.log("mult")
+                    console.log(mult[i])
+
+                    //var polyline = L.polyline(mult[i], { color: 'blue' }).addTo(mymap);
+
+
+
+                    //if (x == 1) {
+                    //   inicio.setLatLng([sqld[0][1], sqld[0][2]]);
+                    //    x = 0;
+                    //}
+
+                    
+
+                    var marker = L.marker([sqld[0][1], sqld[0][2]], { icon: customIcon }).addTo(mymap);
+                    marker_remove.push(marker);
+                }
+                else {
+                    console.log("Ready state", http.readyState);
+                    console.log("Ready status", http.status);
+                }
+            }
+            http.send(null);
+
+        }
+    
+        
+    }
+</script>
+
+<script>
+    var search = new Array();
+
+
+    function myFunction(item){
+        if (item.checked){
+            search.push(item.getAttribute("id"));
+        }
+        else{
+            var temp = new Array();
+            var i = 0;
+            for (var j = 0; j<search.length; j++){
+                if (search[j] != item.getAttribute("id")){
+                    temp.push(search[j]);
+                }
+            }
+            search = temp;
+        }
+        
+    }
+</script>
+
+</html>

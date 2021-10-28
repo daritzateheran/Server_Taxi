@@ -20,6 +20,9 @@ def get_conn():
         g.cur=g.conn.cursor()
     return g.conn, g.cur
 
+
+####
+
 def udp():
     conn = pymysql.connect(
             host=os.getenv('FLASK_DATABASE_HOST'),
@@ -54,11 +57,34 @@ def udp():
 # api
 
 # login
-@app.before_request
+"""@app.before_request
 def before():
     url = request.path
-    if not 'placa' in session and url != '/login' and url != "/registrar" and url != "/multiples" and not url.startswith("/static"):
-        return redirect('/login')
+    if not 'placa' in session and url != '/login' and url != "/registrar" or url != "/multiples" and not url.startswith("/static"):
+        return redirect('/login')"""
+
+
+@app.route('/sqlplaca')
+def get_placa():
+        print("holi")
+        plac = request.args.get("placa")
+        print(plac)
+        conn, cur = get_conn()
+        cur=conn.cursor()
+        cur.execute(f"SELECT * FROM {plac} WHERE Id = (SELECT MAX(Id) FROM {plac})")
+        conn.commit() #si lo quito no sirve
+        datos = cur.fetchall()
+        
+        cur.close()
+        
+        def datetime_handler(x):
+            if isinstance(x, (datetime,datetime)):
+                return x.isoformat()
+            raise TypeError("Unknown type")
+        var1 = json.dumps(datos, default=datetime_handler)
+
+        print(var1)
+        return var1
 
 
 @app.route('/<placa>/sqldata')
@@ -138,8 +164,7 @@ def register():
         
 @app.route('/multiples')
 def multiples():
-
-    return render_template("multiples.html")
+    return render_template("multiples.html",text="Inicio", url="logout")
 
 @app.route('/logout')
 def logout():
@@ -169,12 +194,12 @@ def login():
         cur.execute("SELECT * FROM placas;")
         myresult = cur.fetchall()
         cur.close()
-        print(myresult)
+        #print(myresult)
 
         placas = [placa[1] for placa in myresult]
         
         #show tables 
-        return render_template('buscar.html', text="Registrar", url="registrar", texto_1="MULTI USUARIOS", texto_2="", placas=placas)
+        return render_template('buscar.html', text="Registrar", url="registrar", texto_1="", texto_2="", placas=placas)
 
 #Enviar lista en vez de placa
 @app.route('/')
