@@ -75,6 +75,8 @@
 
 <script type="text/javascript">
 
+    
+
     var mult = new Array();
     var ruta = new Array();
     var marker_remove = new Array();
@@ -94,45 +96,65 @@
     tiles.addTo(mymap);
     //let marker = L.marker([0, 0], { icon: customIcon }).addTo(mymap);
     let inicio = L.marker([0, 0]).addTo(mymap);
-
     
+    var search = new Array();
 
 
+    function myFunction(item){
+        if (item.checked){
+            search.push(item.getAttribute("id"));
+        }
+        else{
+            var temp = new Array();
+            //var i = 0;
+            for (var j = 0; j<search.length; j++){
+                if (search[j] != item.getAttribute("id")){
+                    temp.push(search[j]);
+                }
+            }
+            search = temp;
+        }
+        
+    }
+
+
+    var markers = {
+        "TLO847": L.marker([0, 0], { icon: customIcon }).addTo(mymap),
+        "WPB289": L.marker([0, 0], { icon: customIcon }).addTo(mymap),
+        "TRU189": L.marker([0, 0], { icon: customIcon }).addTo(mymap)
+    }
+    //var search = new Array();
+    //search=['TLO847','WPB289']
 
 
     setInterval('reload()', 1000);
 
     //no se debe ejecutar en mientras se consulta <=> otra ruta 
+
     
 
+
     function reload() {
+      
 
-        
-        for(var i=0;i<search.length; i++){
-
-            for (var mark of marker_remove){
-                mymap.removeLayer(mark);
-            }
-            marker_remove=[];
-
-
-            const http = new XMLHttpRequest();
-            http.open('GET', "/sqlplaca?placa=" + search[i]);
+        search.forEach((taxi) =>{
+            const http = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
+            http.open('GET', "/"+taxi+"/sqlplaca")
             http.onreadystatechange = function () {
                 if (http.readyState == 4 && http.status == 200) {
                     var sqld = http.responseText;
-                    //console.log(search[i],sqld)
                     sqld = JSON.parse(sqld);
 
-                    if (mult[i]){
-                        mult[i].push([sqld[0][1], sqld[0][2]]);
-                    }
-                    else{
-                        mult.push([[sqld[0][1], sqld[0][2]]])
-                    }
                     
-                    console.log("mult")
-                    console.log(mult[i])
+                    //if (mult[i]){
+                    //    mult[i].push([sqld[0][1], sqld[0][2]]);
+                    //}
+                    //else{
+                    //    mult.push([[sqld[0][1], sqld[0][2]]])
+                    //}
+                    
+                    //console.log("mult");
+                    //console.log(mult[i]);
 
                     //var polyline = L.polyline(mult[i], { color: 'blue' }).addTo(mymap);
 
@@ -143,10 +165,42 @@
                     //    x = 0;
                     //}
 
-                    
+                    //Fdate = sqld[0][3].split("T")
+                    //if (x == 1) {
+                    //    inicio.setLatLng([sqld[0][1], sqld[0][2]]);
+                    //    x = 0;
+                    //}
 
-                    var marker = L.marker([sqld[0][1], sqld[0][2]], { icon: customIcon }).addTo(mymap);
-                    marker_remove.push(marker);
+                    // modificar campos de html, hacer el link
+                    //changelat.innerHTML = `${sqld[0][1]}`
+                    //changelong.innerHTML = `${sqld[0][2]}`
+                    //changetime.innerHTML = `${Fdate[1]}`
+                    //changehour.innerHTML = `${Fdate[0]}`
+
+                    //mymap.setView([sqld[0][1], sqld[0][2]], mymap.getZoom());
+                    //Polilinea.
+                    //var loc = [sqld[0][1], sqld[0][2]];
+                    //ruta.push(loc);
+                    //var polyline = L.polyline(ruta, { color: 'blue' }).addTo(mymap);
+
+
+                    //marker.setLatLng([sqld[0][1], sqld[0][2]]);
+                    //console.log(sqld[0][0]);
+
+                    console.log("search");
+                    console.log(taxi);
+
+                
+                        
+                    console.log(markers)
+                    console.log(sqld[0][1], sqld[0][2])
+                    markers[taxi].setLatLng([sqld[0][1], sqld[0][2]]);
+                    markers[taxi].setOpacity(1);
+
+                    //var marker = L.marker([sqld[0][1], sqld[0][2]], { icon: customIcon }).addTo(mymap);
+                    
+                    //marker_remove.push(marker);
+
                 }
                 else {
                     console.log("Ready state", http.readyState);
@@ -155,32 +209,10 @@
             }
             http.send(null);
 
-        }
-    
+            });
         
     }
 </script>
 
-<script>
-    var search = new Array();
-
-
-    function myFunction(item){
-        if (item.checked){
-            search.push(item.getAttribute("id"));
-        }
-        else{
-            var temp = new Array();
-            var i = 0;
-            for (var j = 0; j<search.length; j++){
-                if (search[j] != item.getAttribute("id")){
-                    temp.push(search[j]);
-                }
-            }
-            search = temp;
-        }
-        
-    }
-</script>
 
 </html>

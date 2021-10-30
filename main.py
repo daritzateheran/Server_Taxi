@@ -64,17 +64,14 @@ def before():
         return redirect('/login')"""
 
 
-@app.route('/sqlplaca')
-def get_placa():
-        print("holi")
-        plac = request.args.get("placa")
-        print(plac)
+@app.route('/<placa>/sqlplaca')
+def get_placa(placa:str=""):
+        print(placa)
         conn, cur = get_conn()
         cur=conn.cursor()
-        cur.execute(f"SELECT * FROM {plac} WHERE Id = (SELECT MAX(Id) FROM {plac})")
+        cur.execute(f"SELECT * FROM {placa} WHERE Id = (SELECT MAX(Id) FROM {placa})")
         conn.commit() #si lo quito no sirve
         datos = cur.fetchall()
-        
         cur.close()
         
         def datetime_handler(x):
@@ -82,10 +79,7 @@ def get_placa():
                 return x.isoformat()
             raise TypeError("Unknown type")
         var1 = json.dumps(datos, default=datetime_handler)
-
-        print(var1)
         return var1
-
 
 @app.route('/<placa>/sqldata')
 def get_data(placa:str=""):
