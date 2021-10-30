@@ -75,13 +75,8 @@
 
 <script type="text/javascript">
 
-    
 
-    var mult = new Array();
-    var ruta = new Array();
-    var marker_remove = new Array();
-
-    var x = 1;
+   
     var customIcon = new L.Icon({
         iconUrl: 'https://cdn-icons-png.flaticon.com/512/4214/4214491.png',
         iconSize: [50, 50],
@@ -94,12 +89,8 @@
 
     const tiles = L.tileLayer(tileUrl, { attribution });
     tiles.addTo(mymap);
-    //let marker = L.marker([0, 0], { icon: customIcon }).addTo(mymap);
-    let inicio = L.marker([0, 0]).addTo(mymap);
     
     var search = new Array();
-
-
     function myFunction(item){
         if (item.checked){
             search.push(item.getAttribute("id"));
@@ -117,6 +108,24 @@
         
     }
 
+    var x = {
+        "TLO847": 1,
+        "WPB289": 1,
+        "TRU189": 1,
+    }
+
+    var inicio = {
+        "TLO847": L.marker([0, 0]).addTo(mymap),
+        "WPB289": L.marker([0, 0]).addTo(mymap),
+        "TRU189": L.marker([0, 0]).addTo(mymap),
+    }
+
+
+    var ruta = {
+        "TLO847": new Array(),
+        "WPB289": new Array(),
+        "TRU189": new Array()
+    }
 
     var markers = {
         "TLO847": L.marker([0, 0], { icon: customIcon }).addTo(mymap),
@@ -146,17 +155,28 @@
                     sqld = JSON.parse(sqld);
 
                     
-                    //if (mult[i]){
-                    //    mult[i].push([sqld[0][1], sqld[0][2]]);
-                    //}
-                    //else{
-                    //    mult.push([[sqld[0][1], sqld[0][2]]])
-                    //}
                     
-                    //console.log("mult");
-                    //console.log(mult[i]);
 
-                    //var polyline = L.polyline(mult[i], { color: 'blue' }).addTo(mymap);
+                    console.log("search");
+                    console.log(taxi);
+                    ruta[taxi].push([sqld[0][1], sqld[0][2]]);
+                   
+                    
+                  
+                    if(x[taxi]==1){
+                        inicio[taxi].setLatLng([sqld[0][1], sqld[0][2]]).bindPopup('Comienzo del <br> recorrido');
+                        x[taxi]=0;
+                    }               
+                    
+                   
+                    
+                    
+                    var polylines = {
+                        "TLO847": L.polyline(ruta[taxi], { color: 'blue' }).addTo(mymap),
+                        "WPB289": L.polyline(ruta[taxi], { color: 'red' }).addTo(mymap),
+                        "TRU189": L.polyline(ruta[taxi], { color: 'green' }).addTo(mymap)
+                    }
+                    console.log(polylines[taxi]);
 
 
 
@@ -187,14 +207,9 @@
                     //marker.setLatLng([sqld[0][1], sqld[0][2]]);
                     //console.log(sqld[0][0]);
 
-                    console.log("search");
-                    console.log(taxi);
+                    
 
-                
-                        
-                    console.log(markers)
-                    console.log(sqld[0][1], sqld[0][2])
-                    markers[taxi].setLatLng([sqld[0][1], sqld[0][2]]);
+                    markers[taxi].setLatLng([sqld[0][1], sqld[0][2]]).bindPopup(taxi);
                     markers[taxi].setOpacity(1);
 
                     //var marker = L.marker([sqld[0][1], sqld[0][2]], { icon: customIcon }).addTo(mymap);
