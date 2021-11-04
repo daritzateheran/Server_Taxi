@@ -3,6 +3,8 @@ from flask import Flask, render_template, jsonify, g, request, session, url_for,
 from datetime import datetime
 import socket, threading, pymysql, os, json
 
+from werkzeug.datastructures import Range
+
 
 # server config
 app = Flask(__name__)
@@ -66,7 +68,6 @@ def before():
 
 @app.route('/<placa>/sqlplaca')
 def get_placa(placa:str=""):
-        print(placa)
         conn, cur = get_conn()
         cur=conn.cursor()
         cur.execute(f"SELECT * FROM {placa} WHERE Id = (SELECT MAX(Id) FROM {placa})")
@@ -98,6 +99,26 @@ def get_data(placa:str=""):
         var1 = json.dumps(datos, default=datetime_handler)
         return var1
 
+        
+
+@app.route('/hmult')
+def hmult():
+    return render_template('hmult.html',text="Inicio", url="logout")
+
+@app.route('/hmultiple')
+def get_hmult(placa:str=""):
+    init_date = request.args.get("param1")
+    final_date = request.args.get("param2")
+    
+    conn, cur = get_conn()
+    cur=conn.cursor()
+    
+    cur.execute(f"SELECT * FROM  {placa} WHERE FHora between '"+ init_date +"' AND '"+ final_date +"'")
+    conn.commit() #si lo quito no sirve
+    datos = cur.fetchall()
+    cur.close()
+    return jsonify(datos)
+
 
 @app.route('/<placa>/historicos')
 def get_history(placa:str=""):
@@ -124,10 +145,11 @@ def pull():
 # rutas
 
 @app.route('/<placa>/historial')
-def historial(placa:str=""):
-
-    if  placa == session['placa']:
-        return render_template('Historial.html', text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="")
+def historial(placa:str = ''):
+    for i in range(len(placas)):
+        if placas[i] == session[f'placa{i}']:
+            print(placas[i])
+            return render_template("historial.html",text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="",placas=placas) 
 
 
 # rutas principales
@@ -169,20 +191,27 @@ def logout():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        placa  = request.form['placa']
-        #print(request.form["placas"])
+        n = request.form['numero']
+        print (n)
+        global placas
+        placas = []
+        for i in range(int(n)):
+            placas.append(request.form[f'placa{i}'])
+
+
         conn, cur = get_conn()
         cur=conn.cursor()
         cur.execute("Show tables;")
         myresult = cur.fetchall()
         cur.close()
         
-        for i in range(len(myresult)):
-            if myresult[i][0] == placa:
-                session['placa'] = placa
-                return redirect(url_for("index", placa=placa))
-        else:
-            return render_template('buscar.html', text="Registrar")  
+        for j in range(int(n)):
+            session[f'placa{j}'] = placas[j]
+
+        
+    
+        return redirect(url_for("index", placa=placas))
+
     else:
         conn, cur = get_conn()
         cur=conn.cursor()
@@ -200,13 +229,13 @@ def login():
 @app.route('/')
 @app.route('/<placa>')
 def index(placa:str = ''):
-    if placa == session['placa']:
-        return render_template('index.html', text="Cerrar sesión", url="logout", texto_1="", texto_2="Historial")
-    return "Placa invalida"
+    for i in range(len(placas)):
         
+        if placas[i] == session[f'placa{i}']:
+             return render_template('index.html', text="Cerrar sesión", url="logout", texto_1="", texto_2="Historial",placas=placas)
+
+        return "Placa invalida"
         
-
-
 
 if __name__ == '__main__':
     server_udp = threading.Thread(target=udp, daemon=True)

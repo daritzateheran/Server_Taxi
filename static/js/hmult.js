@@ -1,4 +1,3 @@
-
 var ruta = new Array()
 var x = 1;
 var customIcon = new L.Icon({
@@ -20,39 +19,8 @@ const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const tiles = L.tileLayer(tileUrl, { attribution });
 tiles.addTo(mymap);
-
-
-
-
-
-var search = new Array();
-function myFunction(item){
-    if (item.checked){
-        search.push(item.getAttribute("id"));
-        console.log(search)
-    }
-    else{
-        var temp = new Array();
-        //var i = 0;
-        for (var j = 0; j<search.length; j++){
-            if (search[j] != item.getAttribute("id")){
-                temp.push(search[j]);
-            }
-        }
-        search = temp;
-        console.log(temp)
-    }   
-}
-
-var polilineas = new Object();
-var marker_remove = new Object();
-
-
-var p = document.querySelectorAll("input[type=checkbox]");
-for (var j = 0; j<p.length; j++){
-    inicio[p[j].id]=L.marker([0, 0]).addTo(mymap)
-    ruta[p[j].id]=new Array()
-}
+let marker;
+let inicio;
 
 
 // SELECCIONAR ELEMENTOS DEL HTML
@@ -61,6 +29,8 @@ const historybutton = document.getElementById('requestbutton');
 
 var initialdate = document.getElementById('initialdate');
 var finaldate = document.getElementById('finaldate');
+var polilineas = new Array();
+var marker_remove = new Array();
 
 x = 1;
 function enlazamientodefechas(fecha1) {
@@ -80,11 +50,9 @@ function reset() {
     finaldate.max = hoy.format("YYYY-MM-DDTHH:mm")
 
 }
+historybutton.addEventListener('click', consulta);
 
-
-/*historybutton.addEventListener('click', consulta);*/
-
-/*function consulta() {
+function consulta() {
 
     
     var param1 = initialdate.value
@@ -152,9 +120,8 @@ function reset() {
     }
 
     httpH.send(null);
-}*/
+}
 
-/*
 function update(p) {
 
     const http = new XMLHttpRequest()
@@ -189,4 +156,4 @@ function update(p) {
     }
 
     http.send();
-}*/
+}

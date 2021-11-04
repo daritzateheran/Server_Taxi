@@ -1,0 +1,15 @@
+/* Style buttons */
+.span {
+  background-color: rgb(255, 251, 0); /* yellow background */
+  border:rgb(247, 247, 247); /* Remove borders */
+  color: rgb(3, 3, 3); /* White text */
+  padding: 8px 10px; /* Some padding */
+  font-size: 12px; /* Set a font size */
+  cursor: pointer; /* Mouse pointer on hover */
+  border-radius: 15px;
+}
+
+/* Darker background on mouse-over */
+.span:hover {
+  background-color: rgb(241, 239, 107);
+}

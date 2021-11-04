@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 <link rel="stylesheet" href="../static/buscar.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../static/span.css">
+
 
 {% include "nav-bar.html" %}
 
@@ -10,31 +13,72 @@
                 <form action="/login" method="post">
                     <div class="field">
                         <label class="label">PLACA</label>
-                        <div class="control">
-                            <input class="input" type="text" required name="placa" autofocus>
+                        <input class="input" id="0" type="text" required name="placa0" autofocus
+                            style="margin-bottom: 10px;">
+                        <div id="inputSeek"></div>
+                        <div class="buttons">
+                            <button class="button is-primary" type="submit">Buscar</button>
                         </div>
-                        <select name="placas" id="placas" multiple>
-                            {% for placa in placas  %}
-                                <option value= {{ placa }}> 
-                                    {{ placa }}
-                                </option>
-                            {% endfor %}
-
-                        </select>
                     </div>
-                    <div class="buttons">
-                        <button class="button is-primary" type="submit">Buscar</button>
-                    </div>
+                    <input type="hidden" id="p_numeros" name="numero" value="1">
                 </form>
             </div>
         </div>
 
         <div class="column">
             <div class="box">
-            
-            <h1 class="title is-2"><b>¡Bienvenido!</b></h1>
-            <p> Por favor, ingrese la placa del automotor en el campo indicado. En caso de que no se genere un ingreso, por favor registre la nueva placa. 
-            </p>         
+                <h1 class="title is-2"><b>¡Bienvenido!</b></h1>
+                <p> Por favor, ingrese la placa del automotor en el campo indicado. En caso de que no se genere un
+                    ingreso, por favor registre la nueva placa.
+                </p>
+                <br>
+                <h1 class="title is-4"><b>Insertar/Quitar placa</b></h1>
+                <button class="span" onclick="agregar()"><i class="fa fa-plus-circle fa-2x"></i></button>
+                <button class="span" onclick="eliminar()"><i class="fa fa-minus-circle fa-2x"></i></button>
+                <br>
+                <br>
+
+                <select name="" id="placas">
+                    <option value=""></option>
+                    {% for row in placas %}
+                    <option value="{{row}}">{{row}}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
         </div>
     </div>
 </body>
+
+<script>
+    var a = 1;
+    var i = 0;
+    var input_id = '';
+    var id = document.querySelectorAll('.input');
+    input_id = id[i].id;
+    var disable= new Array()
+    
+    var placas = document.getElementById('placas');
+
+    placas.addEventListener('change', function () {
+        var id = document.querySelectorAll('.input');
+        x=0;
+        for (i=0; id.length; i++){
+            input_id = id[i].id;  
+            var placa = document.getElementById(input_id); 
+            console.log(placa)  
+
+            if (placa.value=="" && x==0){
+                placa.value = placas.value;
+                x=1;
+                var dis = document.getselectorAll('.input');
+                disable.push(dis)
+                console.log(disable)  
+            } 
+        }
+        
+            
+    });
+</script>
+
+<script src="../static/js/agregar.js"></script>
