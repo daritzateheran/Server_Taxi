@@ -22,42 +22,60 @@ const tiles = L.tileLayer(tileUrl, { attribution });
 tiles.addTo(mymap);
 
 
+var inicio = new Object();
+var ruta = new Object();
+var markers = new Object();
+var marker_ = new Object();
+var marker_remove = new Object();
+var polylines = new Object();
+var temp = new Object();
+var remove = new Object();
+var rem_marker = new Object();
+var rem_inicio = new Object();
+
+
 
 
 
 var search = new Array();
 function myFunction(item){
-    if (item.checked){
+    if (item.checked==true){
         search.push(item.getAttribute("id"));
-        console.log(search)
+        temp[item.getAttribute("id")] = 1;
     }
     else{
-        var temp = new Array();
-        //var i = 0;
         for (var j = 0; j<search.length; j++){
-            if (search[j] != item.getAttribute("id")){
-                temp.push(search[j]);
-            }
+            temp[item.getAttribute("id")] = 0;
         }
-        search = temp;
-        console.log(temp)
     }   
 }
 
-var polilineas = new Object();
-var marker_remove = new Object();
 
-
+var s = document.querySelectorAll('.info')
 var p = document.querySelectorAll("input[type=checkbox]");
 for (var j = 0; j<p.length; j++){
-    inicio[p[j].id]=L.marker([0, 0]).addTo(mymap)
+    inicio[p[j].id]=null
     ruta[p[j].id]=new Array()
+    markers[p[j].id]=null
+    marker_[p[j].id]=null
+    temp[p[j].id]=0;
+    marker_remove[p[j].id]=new Array();
+    remove[p[j].id]=new Array();
+    rem_marker[p[j].id]=new Array();
+    rem_inicio[p[j].id]=new Array();
 }
+
+for(var i=0;i<s.length;i++){
+    a=s[i].childNodes[7]
+    console.log(a)
+}
+
+
+
 
 
 // SELECCIONAR ELEMENTOS DEL HTML
 const historybutton = document.getElementById('requestbutton');
-//const centerm = document.getElementById('centermap');
 
 var initialdate = document.getElementById('initialdate');
 var finaldate = document.getElementById('finaldate');
@@ -82,11 +100,11 @@ function reset() {
 }
 
 
-/*historybutton.addEventListener('click', consulta);*/
+historybutton.addEventListener('click', consulta);
 
-/*function consulta() {
-
-    
+function consulta() {
+    console.log(temp)
+    console.log(inicio)
     var param1 = initialdate.value
     var param2 = finaldate.value
 
@@ -101,92 +119,112 @@ function reset() {
         x = 0;
     }
 
+    search.forEach((taxi) =>{
+        const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
+        httpH.open('GET', "/"+taxi+"/historicos?param1=" + param1 + "&param2=" + param2)
+        httpH.onreadystatechange = function () {
+            if (httpH.readyState == 4 && httpH.status == 200) {
+                var rutahist = JSON.parse(httpH.responseText);
+                console.log(taxi)
+                ruta[taxi]=[]
+                for (var i = 0; i < rutahist.length; i++) {
+                    if (i == 0 && temp[taxi]==1) {
+                            if(rem_inicio[taxi]){
+                                for (var marker of rem_inicio[taxi]) {
+                                    mymap.removeLayer(marker);
+                                }
+                            }
+                            inicio[taxi] = L.marker([rutahist[i][1], rutahist[i][2]]).addTo(mymap).bindPopup(taxi)
+                            rem_inicio[taxi].push(inicio[taxi])
+                        
+                    }
+                    if (i == rutahist.length - 1 && temp[taxi]==1) {
+                            markers[taxi]=L.marker([rutahist[i][1], rutahist[i][2]], { icon: customIcon }).addTo(mymap).bindPopup(taxi)
+                            rem_marker[taxi].push(markers[taxi])
+          
+                    }
+                    ruta[taxi].push([rutahist[i][1], rutahist[i][2]]);
+                }
 
-    const httpH = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
-    httpH.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2)
-    httpH.onreadystatechange = () => {
-        if (httpH.readyState == 4 && httpH.status == 200) {
-            var rutahist = JSON.parse(httpH.responseText);
-            var ruta = new Array()
-            for (var i = 0; i < rutahist.length; i++) {
+                polylines[taxi]=L.polyline(ruta[taxi], { color: 'blue' }).addTo(mymap)
+                remove[taxi].push(polylines[taxi])
+                x = 1;
 
-                if (i == 0) {
-                    inicio = L.marker([rutahist[i][1], rutahist[i][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido').openPopup();
+                
+                if (temp[taxi]==0){
+                    for (var line of remove[taxi]) {
+                        mymap.removeLayer(line);
+                    }
+                    for (var marker of rem_marker[taxi]) {
+                        mymap.removeLayer(marker);
+                    }
+                    for (var marker of rem_inicio[taxi]) {
+                        mymap.removeLayer(marker);
+                    }
+                    
+                    remove[taxi]=[];
+                    rem_marker[taxi]=[];
+                    rem_inicio[taxi]=[];
+
+                /*// slider
+                const slider = document.getElementById('slider');
+                const tr = document.getElementById('rgt');
+
+                tr.innerHTML = rutahist.length;
+                slider.max = rutahist.length;*/
 
                 }
-                if (i == rutahist.length - 1) {
-                    marker = L.marker([rutahist[i][1], rutahist[i][2]], { icon: customIcon }).addTo(mymap).bindPopup('Final del recorrido').openPopup();
-                    mymap.setView([rutahist[i][1], rutahist[i][2]], 14);
-                }
 
-                //console.log(rutahist[i][1])
-                ruta.push([rutahist[i][1], rutahist[i][2]]);
+                
             }
-            //eliminar la polilinea
-            if (polilineas) {
-                for (var line of polilineas) {
-                    mymap.removeLayer(line);
-                }
+            else {
+                console.log("Ready state", httpH.readyState);
+                console.log("Ready status", httpH.status);
             }
-            polilineas=[];
 
-            //polilinea
-            if (ruta == false && x != 0) {
-                alert("No existe recorrido para este rango de fechas");
-            }
-            var polyline = L.polyline(ruta, { color: 'blue' }).addTo(mymap);
-            polilineas.push(polyline);
-            x = 1;
 
-            // slider
-            const slider = document.getElementById('slider');
-            const tr = document.getElementById('rgt');
-
-            tr.innerHTML = rutahist.length;
-            slider.max = rutahist.length;
-
-        } else {
-            console.log("Ready state", httpH.readyState);
-            console.log("Ready status", httpH.status);
         }
-    }
+        
+        httpH.send(null);
 
-    httpH.send(null);
-}*/
-
-/*
+    });
+}
 function update(p) {
 
-    const http = new XMLHttpRequest()
+    search.forEach((taxi) =>{
+        const http = new XMLHttpRequest()
     var param1 = initialdate.value;
     var param2 = finaldate.value;
     http.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2);
     http.onload =  () => {
+
         if (http.status == 200) {
             let data = JSON.parse(http.responseText);
            
 
             if (p == 0) {
-                if (polilineas) {
-                    for (var line of polilineas) {
+                if (remove[taxi]) {
+                    for (var line of remove[taxi]) {
                         mymap.removeLayer(line);
                     }
                 }
-                inicio = L.marker([data[p][0], data[0][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido').openPopup();
+                inicio[taxi] = L.marker([data[p][0], data[0][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido').openPopup();
             } else {
                 console.log(p);
-                if (marker_remove) {
-                    for (var mark of marker_remove) {
+                if (marker_remove[taxi]) {
+                    for (var mark of marker_remove[taxi]) {
                         mymap.removeLayer(mark);
                     }
                 }
-                marker_remove=[];
-                marker = L.marker([data[p][1], data[p][2]], { icon: customIcon2 }).addTo(mymap).bindPopup(data[p][3]).openPopup();
-                mymap.setView([data[p][1], data[p][2]], 14);
-                marker_remove.push(marker);
+                marker_remove[taxi]=[];
+                marker_[taxi] = L.marker([data[p][1], data[p][2]], { icon: customIcon2 }).addTo(mymap).bindPopup(data[p][3]).openPopup();
+                marker_remove[taxi].push(marker_[taxi]);
             }
         }
-    }
+        }
+        
+        httpH.send(null);
 
-    http.send();
-}*/
+    });
+}
+    

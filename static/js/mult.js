@@ -25,11 +25,6 @@
                 temp[item.getAttribute("id")] = 0;
             }
         }   
-        console.log("item")
-        a=item.getAttribute("id")
-        console.log(a)
-        console.log("temp")
-        console.log(temp)
     }
 
     var x = new Object();
@@ -39,10 +34,19 @@
     var polylines = new Object();
     var temp = new Object();
     var remove = new Object();
+    var changelat = new Object();
+    var changelong = new Object();
+    var changetime = new Object();
+    var changehour = new Object();
+
+
+
 
 
 
     var p = document.querySelectorAll("input[type=checkbox]");
+    var lat = document.querySelectorAll(".info")
+
 
     for (var j = 0; j<p.length; j++){
         x[p[j].id]=1
@@ -51,10 +55,36 @@
         markers[p[j].id]=L.marker([0, 0], { icon: customIcon }).addTo(mymap)
         temp[p[j].id]=4;
         remove[p[j].id]=new Array();
-    }
 
-    
-    
+        for(var i=0;i<lat.length;i++){
+            a=lat[i].childNodes[3]
+            if(a.id==p[j].id){
+                changelat[p[j].id]=lat[i].childNodes[9]
+            } 
+        }
+
+        for(var i=0;i<lat.length;i++){
+            a=lat[i].childNodes[9]
+            if(a.id==p[j].id){
+                changelong[p[j].id]=lat[i].childNodes[15]
+            } 
+        }
+
+        for(var i=0;i<lat.length;i++){
+            a=lat[i].childNodes[15]
+            if(a.id==p[j].id){
+                changehour[p[j].id]=lat[i].childNodes[21]
+            } 
+        }
+
+        for(var i=0;i<lat.length;i++){
+            a=lat[i].childNodes[21]
+            console.log(lat[i].childNodes)
+            if(a.id==p[j].id){
+                changetime[p[j].id]=lat[i].childNodes[27]
+            } 
+        }
+    }
        
 
     setInterval('reload()', 1000);
@@ -63,7 +93,6 @@
 
     function reload() {
 
-        console.log(temp)
 
         search.forEach((taxi) =>{
             const http = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
@@ -72,15 +101,17 @@
                 if (http.readyState == 4 && http.status == 200) {
                     var sqld = http.responseText;
                     sqld = JSON.parse(sqld);
+                    Fdate = sqld[0][3].split("T")
 
-                    
-                    
-
-                    /*console.log("search");
-                    console.log(taxi);*/
                     ruta[taxi].push([sqld[0][1], sqld[0][2]]);
-                   
-                    
+
+                    changelat[taxi].innerHTML = `${sqld[0][1]}`
+                    changelong[taxi].innerHTML = `${sqld[0][2]}`
+                    changetime[taxi].innerHTML = `${Fdate[1]}`
+                    changehour[taxi].innerHTML = `${Fdate[0]}`
+
+
+                        
                   
                     if(x[taxi]==1){
                         inicio[taxi].setLatLng([sqld[0][1], sqld[0][2]]).bindPopup('Comienzo del <br> recorrido');
@@ -109,23 +140,17 @@
                         markers[taxi].setOpacity(1);
                         inicio[taxi].setOpacity(1);
                     }
-                   
                         
 
                 }
                 else {
-                    /*console.log("Ready state", http.readyState);
-                    console.log("Ready status", http.status);*/
+                    console.log("Ready state", http.readyState);
+                    console.log("Ready status", http.status);
                 }
             }
             http.send(null);
 
         });
-        /*console.log(temp);
-
-        temp.forEach((taxi) =>{
-            polyline[taxi].removeFrom(map)      
-        });*/
         
     }
 

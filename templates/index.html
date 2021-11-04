@@ -32,20 +32,28 @@
 
     <div class="grid-p">
         <div class="box">
-            <p class="title is-4">Hora: </p>
-            <p id="fecha"></p><br>
-            <p class="title is-4">Fecha: </p>
-            <p id="hora"></p>
             {% for row in placas %}
-            <div class="box">
-            <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this)">
-            <label for="{{row}}"> {{row}} </label>
-            <br>
-            <br>
-            <p class="title is-6">Latitud:</p>
-            <p id="latitud"></p>
-            <p class="title is-6">Longitud: </p>
-            <p id="longitud"></p>
+            <div class="box">          
+                <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this)">
+                <label for="{{row}}"> {{row}} </label>
+                <br>
+                <br>
+                <div class="info">
+                        <p class="title is-6">RPM:</p>
+                        <p id="{{row}}"></p>
+                        <br>
+                        <p class="title is-6">Latitud:</p>
+                        <p id="{{row}}"></p>
+                        <br>
+                        <p class="title is-6">Longitud: </p>
+                        <p id="{{row}}"></p>
+                        <br>
+                        <p class="title is-6">Fecha:</p>
+                        <p id="{{row}}"></p>
+                        <br>
+                        <p class="title is-6">Hora:</p>
+                        <p id="{{row}}"></p>
+                </div>
             </div>
             {% endfor %}
         </div>

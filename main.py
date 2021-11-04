@@ -62,8 +62,9 @@ def udp():
 """@app.before_request
 def before():
     url = request.path
-    if not 'placa' in session and url != '/login' and url != "/registrar" or url != "/multiples" and not url.startswith("/static"):
-        return redirect('/login')"""
+    for i in range(len(placas)):
+        if not placas[i] in session and url != '/login' and url != "/registrar" or url != "/multiples" and not url.startswith("/static"):
+            return redirect('/login')"""
 
 
 @app.route('/<placa>/sqlplaca')
@@ -122,7 +123,6 @@ def get_hmult(placa:str=""):
 
 @app.route('/<placa>/historicos')
 def get_history(placa:str=""):
-    placa = session.get('placa', None)
     init_date = request.args.get("param1")
     final_date = request.args.get("param2")
     
