@@ -150,7 +150,7 @@ def historial(placa:str = ''):
     for i in range(len(placas)):
         if placas[i] == session[f'placa{i}']:
             print(placas[i])
-            return render_template("historial.html",text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="",placas=placas) 
+            return render_template("Historial.html",text="Cerrar sesión", url="logout", texto_1="Tiempo real", texto_2="",placas=placas) 
 
 
 # rutas principales
