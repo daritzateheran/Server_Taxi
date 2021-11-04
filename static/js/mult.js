@@ -13,22 +13,23 @@
     tiles.addTo(mymap);
     
     var search = new Array();
+   
+
     function myFunction(item){
-        if (item.checked){
+        if (item.checked==true){
             search.push(item.getAttribute("id"));
-            console.log(search)
+            temp[item.getAttribute("id")] = 1;
         }
         else{
-            var temp = new Array();
-            //var i = 0;
             for (var j = 0; j<search.length; j++){
-                if (search[j] != item.getAttribute("id")){
-                    temp.push(search[j]);
-                }
+                temp[item.getAttribute("id")] = 0;
             }
-            search = temp;
-            console.log(temp)
         }   
+        console.log("item")
+        a=item.getAttribute("id")
+        console.log(a)
+        console.log("temp")
+        console.log(temp)
     }
 
     var x = new Object();
@@ -36,15 +37,24 @@
     var ruta = new Object();
     var markers = new Object();
     var polylines = new Object();
+    var temp = new Object();
+    var remove = new Object();
+
 
 
     var p = document.querySelectorAll("input[type=checkbox]");
+
     for (var j = 0; j<p.length; j++){
         x[p[j].id]=1
         inicio[p[j].id]=L.marker([0, 0]).addTo(mymap)
         ruta[p[j].id]=new Array()
         markers[p[j].id]=L.marker([0, 0], { icon: customIcon }).addTo(mymap)
+        temp[p[j].id]=4;
+        remove[p[j].id]=new Array();
     }
+
+    
+    
        
 
     setInterval('reload()', 1000);
@@ -53,6 +63,7 @@
 
     function reload() {
 
+        console.log(temp)
 
         search.forEach((taxi) =>{
             const http = new XMLHttpRequest() // metodo de javascript, para hacer peticiones a una url
@@ -65,8 +76,8 @@
                     
                     
 
-                    console.log("search");
-                    console.log(taxi);
+                    /*console.log("search");
+                    console.log(taxi);*/
                     ruta[taxi].push([sqld[0][1], sqld[0][2]]);
                    
                     
@@ -74,25 +85,48 @@
                     if(x[taxi]==1){
                         inicio[taxi].setLatLng([sqld[0][1], sqld[0][2]]).bindPopup('Comienzo del <br> recorrido');
                         x[taxi]=0;
-                    }               
-                    
-                   
+                    }       
                     
                     polylines[taxi]=L.polyline(ruta[taxi], { color: 'blue' }).addTo(mymap)
+                    remove[taxi].push(polylines[taxi])
 
-                    console.log(polylines[taxi]);
-
+                  
                     markers[taxi].setLatLng([sqld[0][1], sqld[0][2]]).bindPopup(taxi);
-                    markers[taxi].setOpacity(1);
+                    
+                    if (temp[taxi]==0){
+                        markers[taxi].setOpacity(0);
+                        inicio[taxi].setOpacity(0);
+
+                        
+                        for (var line of remove[taxi]) {
+                            mymap.removeLayer(line);
+                        }
+                        
+                        remove[taxi]=[];
+
+                    }
+                    if(temp[taxi]==1){
+                        markers[taxi].setOpacity(1);
+                        inicio[taxi].setOpacity(1);
+                    }
+                   
+                        
 
                 }
                 else {
-                    console.log("Ready state", http.readyState);
-                    console.log("Ready status", http.status);
+                    /*console.log("Ready state", http.readyState);
+                    console.log("Ready status", http.status);*/
                 }
             }
             http.send(null);
 
-            });
+        });
+        /*console.log(temp);
+
+        temp.forEach((taxi) =>{
+            polyline[taxi].removeFrom(map)      
+        });*/
         
     }
+
+    
