@@ -32,8 +32,8 @@ var temp = new Object();
 var remove = new Object();
 var rem_marker = new Object();
 var rem_inicio = new Object();
-
-
+var slider = new Object();
+var rgt = new Object();
 
 
 
@@ -63,12 +63,24 @@ for (var j = 0; j<p.length; j++){
     remove[p[j].id]=new Array();
     rem_marker[p[j].id]=new Array();
     rem_inicio[p[j].id]=new Array();
+
+    for(var i=0;i<s.length;i++){
+        a=s[i].childNodes[7]
+        if(a.id==p[j].id){
+          slider[p[j].id]=s[i].childNodes[7]
+        }
+    }
+
+    for(var i=0;i<s.length;i++){
+        a=s[i].childNodes[4]
+        if(a.id==p[j].id){
+          rgt[p[j].id]=s[i].childNodes[4]
+        }
+    }
+    
 }
 
-for(var i=0;i<s.length;i++){
-    a=s[i].childNodes[7]
-    console.log(a)
-}
+
 
 
 
@@ -166,20 +178,16 @@ function consulta() {
                     rem_marker[taxi]=[];
                     rem_inicio[taxi]=[];
 
-                /*// slider
-                const slider = document.getElementById('slider');
-                const tr = document.getElementById('rgt');
-
-                tr.innerHTML = rutahist.length;
-                slider.max = rutahist.length;*/
-
                 }
-
-                
+                //slider
+                rgt[taxi].innerHTML = rutahist.length;
+                slider[taxi].max = rutahist.length;
+                console.log(rgt);
+                console.log(slider);              
             }
             else {
-                console.log("Ready state", httpH.readyState);
-                console.log("Ready status", httpH.status);
+                //console.log("Ready state", httpH.readyState);
+                //console.log("Ready status", httpH.status);
             }
 
 
@@ -195,7 +203,7 @@ function update(p) {
         const http = new XMLHttpRequest()
     var param1 = initialdate.value;
     var param2 = finaldate.value;
-    http.open('GET', "/<placa>/historicos?param1=" + param1 + "&param2=" + param2);
+    http.open('GET', "/"+taxi+"/historicos?param1=" + param1 + "&param2=" + param2);
     http.onload =  () => {
 
         if (http.status == 200) {
@@ -208,7 +216,7 @@ function update(p) {
                         mymap.removeLayer(line);
                     }
                 }
-                inicio[taxi] = L.marker([data[p][0], data[0][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido').openPopup();
+                inicio[taxi] = L.marker([data[p][0], data[0][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido');
             } else {
                 console.log(p);
                 if (marker_remove[taxi]) {
@@ -216,14 +224,16 @@ function update(p) {
                         mymap.removeLayer(mark);
                     }
                 }
+                text=taxi+": "+data[p][3]
+                console.log(text)
                 marker_remove[taxi]=[];
-                marker_[taxi] = L.marker([data[p][1], data[p][2]], { icon: customIcon2 }).addTo(mymap).bindPopup(data[p][3]).openPopup();
+                marker_[taxi] = L.marker([data[p][1], data[p][2]], { icon: customIcon2 }).addTo(mymap).bindPopup(text).openPopup();
                 marker_remove[taxi].push(marker_[taxi]);
             }
         }
         }
         
-        httpH.send(null);
+        http.send(null);
 
     });
 }

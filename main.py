@@ -123,6 +123,7 @@ def get_hmult(placa:str=""):
 
 @app.route('/<placa>/historicos')
 def get_history(placa:str=""):
+    print(placa)
     init_date = request.args.get("param1")
     final_date = request.args.get("param2")
     
