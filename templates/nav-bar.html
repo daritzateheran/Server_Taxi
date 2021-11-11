@@ -1,41 +1,47 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 
 
-<div class="box">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
+<nav class="navbar" role="navigation" aria-label="main navigation" style="background-color: rgb(243, 247, 33); height: 90px;">
+    <div class="navbar-brand">
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+            data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
 
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-                data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-
-        <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href=" {{ url_for('index', placa=placas) }} ">
-                    {{texto_1}}
-                </a>
-
-                <a class="navbar-item" href=" {{ url_for('historial', placa=placas) }} ">
-                    {{texto_2}}
-                </a>
-            </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a class="button is-primary" href="/{{url}}">
-                            <strong>{{text}}</strong>
-                        </a>
-                    </div>
+    <div id="navbarBasicExample" class="navbar-menu" style="height:100%;">
+        <div id="logo-container" style="height:80px; display:flex; align-items:center;">
+            <div style="display:flex;" style="height:100%;">
+                <img src="static/png/navbarLogo.png" alt="Logo" width="65" height="65">
+                <div>
+                    <h1 style="font-size:40px; font-style:italic; font-weight:700;">TaxiLocation</h1>
                 </div>
             </div>
         </div>
-    </nav>
-</div>
+        <div class="navbar-start">
+            <a class="navbar-item" href=" {{ url_for('index', placa=placas) }} ">
+                {{texto_1}}
+            </a>
+
+            <a class="navbar-item" href=" {{ url_for('historial', placa=placas) }} ">
+                {{texto_2}}
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-primary" href="/{{url}}" style="background-color: rgb(44, 44, 44); color:white;">
+                        <strong>{{text}}</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

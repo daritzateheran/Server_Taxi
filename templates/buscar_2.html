@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-<link rel="stylesheet" href="{{url_for('static', filename='buscar.css')}}">
+<link rel="stylesheet" href="../static/buscar.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="../static/span.css">
 
@@ -7,32 +7,7 @@
 {% include "nav-bar.html" %}
 
 <body>
-    <br>
-    <br>
-    <div class="centerColumn container">
-        <h1 class="title is-2" style="text-align:center;"><b>¡Bienvenido!</b></h1>
-        <p style="text-align:center;">Un sitio web donde puedes ejercer control sobre tu negocio a simple vista.</p>
-        <p style="text-align:center;"> Por favor, ingrese la placa del automotor en el campo indicado. En caso de que no se genere un
-            ingreso, por favor registre la nueva placa.
-        </p>
-    </div>
     <div class="columns">
-        <div class="column">
-            <div class="box">
-                <h1 class="title is-4" style="font-size: 25px; margin-bottom:10px;"><b>Insertar/Quitar placa</b></h1>
-                <div style="margin-bottom: 10px;">
-                    <select name="" id="placas" style="width:200px; height:30px;">
-                        <option value=""></option>
-                        {% for row in placas %}
-                        <option value="{{row}}">{{row}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button class="span" onclick="agregar()"><i class="fa fa-plus-circle fa-2x"></i></button>
-                <button class="span" onclick="eliminar()"><i class="fa fa-minus-circle fa-2x"></i></button>
-            </div>
-        </div>
-
         <div class="column">
             <div class="box">
                 <form action="/login" method="post">
@@ -42,11 +17,34 @@
                             style="margin-bottom: 10px;">
                         <div id="inputSeek"></div>
                         <div class="buttons">
-                            <button class="button is-primary" type="submit" style="background-color: rgb(44, 44, 44); color: white;">Buscar</button>
+                            <button class="button is-primary" type="submit">Buscar</button>
                         </div>
                     </div>
                     <input type="hidden" id="p_numeros" name="numero" value="1">
                 </form>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="box">
+                <h1 class="title is-2"><b>¡Bienvenido!</b></h1>
+                <p> Por favor, ingrese la placa del automotor en el campo indicado. En caso de que no se genere un
+                    ingreso, por favor registre la nueva placa.
+                </p>
+                <br>
+                <h1 class="title is-4"><b>Insertar/Quitar placa</b></h1>
+                <button class="span" onclick="agregar()"><i class="fa fa-plus-circle fa-2x"></i></button>
+                <button class="span" onclick="eliminar()"><i class="fa fa-minus-circle fa-2x"></i></button>
+                <br>
+                <br>
+
+                <select name="" id="placas">
+                    <option value=""></option>
+                    {% for row in placas %}
+                    <option value="{{row}}">{{row}}</option>
+                    {% endfor %}
+                </select>
+
             </div>
         </div>
     </div>
