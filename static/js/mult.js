@@ -38,6 +38,8 @@
     var changelong = new Object();
     var changetime = new Object();
     var changehour = new Object();
+    var changeRPM = new Object();
+
 
 
 
@@ -84,6 +86,14 @@
                 changetime[p[j].id]=lat[i].childNodes[27]
             } 
         }
+
+        for(var i=0;i<lat.length;i++){
+            a=lat[i].childNodes[3]
+            console.log(lat[i].childNodes)
+            if(a.id==p[j].id){
+                changeRPM[p[j].id]=lat[i].childNodes[3]
+            } 
+        }
     }
        
 
@@ -109,6 +119,8 @@
                     changelong[taxi].innerHTML = `${sqld[0][2]}`
                     changetime[taxi].innerHTML = `${Fdate[1]}`
                     changehour[taxi].innerHTML = `${Fdate[0]}`
+                    changeRPM[taxi].innerHTML = `${sqld[0][4]}`
+
 
 
                         
