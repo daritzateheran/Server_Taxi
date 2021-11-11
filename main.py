@@ -50,7 +50,8 @@ def udp():
             dt=arr[4]+ " " +arr[3]
             placa=arr[6]
             print (placa)
-            cur.execute(f"INSERT INTO {placa} (Latitud, Longitud, Fhora) VALUES (%s,%s,%s)", (arr[1],arr[2],dt))
+            print(arr[7])
+            cur.execute(f"INSERT INTO {placa} (Latitud, Longitud, Fhora, RPM) VALUES (%s,%s,%s,%s)", (arr[1],arr[2],dt,arr[7]))
             conn.commit()          
     except:
         pass
@@ -62,9 +63,8 @@ def udp():
 """@app.before_request
 def before():
     url = request.path
-    for i in range(len(placas)):
-        if not placas[i] in session and url != '/login' and url != "/registrar" or url != "/multiples" and not url.startswith("/static"):
-            return redirect('/login')"""
+    if not 'placa' in session and url != '/login' and url != "/registrar" or url != "/multiples" and not url.startswith("/static"):
+        return redirect('/login')"""
 
 
 @app.route('/<placa>/sqlplaca')
