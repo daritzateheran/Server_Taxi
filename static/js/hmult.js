@@ -122,7 +122,7 @@ function consulta() {
     httpH.send(null);
 }
 
-function update(p) {
+function update(p,plc) {
 
     const http = new XMLHttpRequest()
     var param1 = initialdate.value;
@@ -131,9 +131,9 @@ function update(p) {
     http.onload =  () => {
         if (http.status == 200) {
             let data = JSON.parse(http.responseText);
-           
+           console.log(plc)
 
-            if (p == 0) {
+            if (p == 0, plc == placa) {
                 if (polilineas) {
                     for (var line of polilineas) {
                         mymap.removeLayer(line);
