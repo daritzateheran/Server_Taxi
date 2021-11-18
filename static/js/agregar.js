@@ -1,21 +1,24 @@
 
 
 function agregar() {
-        var myDiv = document.getElementById("inputSeek");
-        var seek = document.createElement('input');
-    
-        seek.setAttribute("class", "input");
-        seek.setAttribute("type", "text");
-        seek.setAttribute("required", "");
-        seek.setAttribute("name", `placa${a}`);
-        seek.setAttribute("id", a);
-        seek.setAttribute("style", "margin-top: 10px; margin-bottom: 10px;");
-        myDiv.appendChild(seek);   
+        if (a < 3){
+            var myDiv = document.getElementById("inputSeek");
+            var seek = document.createElement('input');
         
-        a = a + 1;
-    
-        document.getElementById("p_numeros").value = a;
-}
+            seek.setAttribute("class", "input");
+            seek.setAttribute("type", "text");
+            seek.setAttribute("required", "");
+            seek.setAttribute("name", `placa${a}`);
+            seek.setAttribute("id", a);
+            seek.setAttribute("style", "margin-top: 10px; margin-bottom: 10px;");
+            myDiv.appendChild(seek);   
+            
+            a = a + 1;
+        
+            document.getElementById("p_numeros").value = a;
+        }
+           
+    }
 
 
 function eliminar() {

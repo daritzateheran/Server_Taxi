@@ -130,7 +130,8 @@
                         x[taxi]=0;
                     }       
                     
-                    polylines[taxi]=L.polyline(ruta[taxi], { color: 'blue' }).addTo(mymap)
+                    var polyColor = randomColor()
+                    polylines[taxi]=L.polyline(ruta[taxi], { color: polyColor}).addTo(mymap)
                     remove[taxi].push(polylines[taxi])
 
                   
@@ -166,4 +167,12 @@
         
     }
 
-    
+    function randomColor(){
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i=0; i<6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+        

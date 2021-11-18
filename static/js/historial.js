@@ -66,6 +66,7 @@ for (var j = 0; j<p.length; j++){
 
     for(var i=0;i<s.length;i++){
         a=s[i].childNodes[7]
+        console.log(s[i].children)
         if(a.id==p[j].id){
           slider[p[j].id]=s[i].childNodes[7]
         }
@@ -73,6 +74,8 @@ for (var j = 0; j<p.length; j++){
 
     for(var i=0;i<s.length;i++){
         a=s[i].childNodes[4]
+        
+        
         if(a.id==p[j].id){
           rgt[p[j].id]=s[i].childNodes[4]
         }
@@ -157,8 +160,8 @@ function consulta() {
                     }
                     ruta[taxi].push([rutahist[i][1], rutahist[i][2]]);
                 }
-
-                polylines[taxi]=L.polyline(ruta[taxi], { color: 'blue' }).addTo(mymap)
+                var polyColor = randomColor()
+                polylines[taxi]=L.polyline(ruta[taxi], { color: polyColor}).addTo(mymap)
                 remove[taxi].push(polylines[taxi])
                 x = 1;
 
@@ -197,7 +200,7 @@ function consulta() {
 
     });
 }
-function update(p) {
+function update(p,p_) {
 
     search.forEach((taxi) =>{
         const http = new XMLHttpRequest()
@@ -218,6 +221,7 @@ function update(p) {
                 }
                 inicio[taxi] = L.marker([data[p][0], data[0][2]]).addTo(mymap).bindPopup('Comienzo del <br> recorrido');
             } else {
+                if(p_==taxi){
                 console.log(p);
                 if (marker_remove[taxi]) {
                     for (var mark of marker_remove[taxi]) {
@@ -228,13 +232,24 @@ function update(p) {
                 console.log(text)
                 marker_remove[taxi]=[];
                 marker_[taxi] = L.marker([data[p][1], data[p][2]], { icon: customIcon2 }).addTo(mymap).bindPopup(text).openPopup();
+                mymap.setView([data[p][1], data[p][2]], mymap.getZoom());
                 marker_remove[taxi].push(marker_[taxi]);
             }
+        }
         }
         }
         
         http.send(null);
 
     });
+}
+
+function randomColor(){
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i=0; i<6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
     

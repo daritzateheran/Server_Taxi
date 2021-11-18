@@ -4,5 +4,8 @@
 
 body {
     margin-top:  50px;
+    background: url('../static/png/NewYorkTaxis.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 

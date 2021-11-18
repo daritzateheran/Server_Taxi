@@ -56,23 +56,25 @@
                 </div>
 
             </div>
-           
+            <div>
+                
+            </div>
             {% for row in placas %}
             <div class="box">
-            <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this)">
-            <label for="{{row}}"> {{row}} </label>
-            <br>
-            <br>
-            <div class="info">
-                <p class="title is-5">Paso a paso</p>
-                <p>Total registros: <p id="{{row}}">0</p></p>
-                <input type="range" value="0" id="{{row}}" min="0" max="1" onchange="update(this.value);">
-            </div>
+                <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this)">
+                <label for="{{row}}"> {{row}} </label>
+                <br>
+                <br>
+                <div class="info">
+                    <p class="title is-5">Paso a paso</p>
+                    <p>Total registros:<p id="{{row}}">0</p></p>
+                    <input type="range" value="0" id="{{row}}" min="0" max="1" onchange="update(this.value,id);">
+                </div>
             </div>
 
-           
+
             {% endfor %}
-            
+
 
         </div>
 
@@ -98,6 +100,6 @@
     crossorigin="">
     </script>
 
-<script  src="../static/js/historial.js"></script>
+<script src="../static/js/historial.js"></script>
 
 </html>

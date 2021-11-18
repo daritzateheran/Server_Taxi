@@ -14,13 +14,13 @@
     <div id="navbarBasicExample" class="navbar-menu" style="height:100%;">
         <div id="logo-container" style="height:80px; display:flex; align-items:center;">
             <div style="display:flex;" style="height:100%;">
-                <img src="static/png/navbarLogo.png" alt="Logo" width="65" height="65">
+                <img src="../static/png/logo.png" alt="Logo" width="65" height="65">
                 <div>
                     <h1 style="font-size:40px; font-style:italic; font-weight:700;">TaxiLocation</h1>
                 </div>
             </div>
         </div>
-        <div class="navbar-start">
+        <div class="navbar-start" style="margin-left: 100px;">
             <a class="navbar-item" href=" {{ url_for('index', placa=placas) }} ">
                 {{texto_1}}
             </a>

@@ -12,6 +12,11 @@
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
     <style>
+        .text {
+            height: 500px;
+            overflow-y: scroll;
+        }
+
         .grid-p {
             display: grid;
             grid-template-columns: 30% 70%;
@@ -29,16 +34,16 @@
 
 <body>
     {% include "nav-bar.html" %}
-
     <div class="grid-p">
-        <div class="box">
-            {% for row in placas %}
-            <div class="box">          
-                <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this,id)">
-                <label for="{{row}}"> {{row}} </label>
-                <br>
-                <br>
-                <div class="info">
+        <div class="text">
+            <div class="box">
+                {% for row in placas %}
+                <div class="box">
+                    <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this,id)">
+                    <label for="{{row}}"> {{row}} </label>
+                    <br>
+                    <br>
+                    <div class="info">
                         <p class="title is-6">RPM:</p>
                         <p id="{{row}}"></p>
                         <br>
@@ -53,9 +58,10 @@
                         <br>
                         <p class="title is-6">Hora:</p>
                         <p id="{{row}}"></p>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         <div id="TaxiMap" class="mapa"></div>
     </div>
@@ -72,7 +78,8 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
     crossorigin="">
-</script>
+    </script>
 
-<script  src="../static/js/mult.js"></script>
+<script src="../static/js/mult.js"></script>
+
 </html>
