@@ -130,8 +130,8 @@
                         x[taxi]=0;
                     }       
                     
-                    var polyColor = randomColor()
-                    polylines[taxi]=L.polyline(ruta[taxi], { color: polyColor}).addTo(mymap)
+                    //var polyColor = randomColor()
+                    polylines[taxi]=L.polyline(ruta[taxi], { color: "blue"}).addTo(mymap)
                     remove[taxi].push(polylines[taxi])
 
                   
