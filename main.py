@@ -189,6 +189,7 @@ def logout():
     session.pop("placa", None)
     return redirect("/login")
 
+@app.route('/')
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -227,7 +228,6 @@ def login():
         return render_template('buscar.html', text="Registrar", url="registrar", texto_1="", texto_2="", placas=placas)
 
 #Enviar lista en vez de placa
-@app.route('/')
 @app.route('/<placa>')
 def index(placa:str = ''):
     for i in range(len(placas)):
