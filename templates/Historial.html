@@ -13,6 +13,11 @@
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin="" />
     <style>
+
+        .text {
+            height: 500px;
+            overflow-y: scroll;
+        }
         .grid-p {
             display: grid;
             grid-template-columns: 30% 70%;
@@ -33,6 +38,8 @@
     {% include "nav-bar.html" %}
 
     <div class="grid-p">
+        <div class="text">
+
         <div class="box">
             <p class="title is-4">Fecha Inicial</p>
             <p id="fechaInicial">
@@ -60,7 +67,9 @@
                 
             </div>
             {% for row in placas %}
+
             <div class="box">
+
                 <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this)">
                 <label for="{{row}}"> {{row}} </label>
                 <br>
@@ -77,6 +86,7 @@
 
 
         </div>
+    </div>
 
         <div id="TaxiMap" class="mapa"></div>
 
