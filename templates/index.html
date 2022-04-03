@@ -1,85 +1,17 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <link rel="icon" href="../static/favicon.ico">
     <title>TAXI</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin="" />
-    <style>
-        .text {
-            height: 500px;
-            overflow-y: scroll;
-        }
-
-        .grid-p {
-            display: grid;
-            grid-template-columns: 30% 70%;
-        }
-
-        .mapa {
-            width: 100%;
-            height: 520px;
-            margin: 0;
-            margin-bottom: 50px;
-            border-radius: 5px;
-        }
-    </style>
 </head>
 
 <body>
     {% include "nav-bar.html" %}
-    <div class="grid-p">
-        <div class="text">
-            <div class="box">
-                {% for row in placas %}
-                <div class="box">
-                    <input type="checkbox" class="check" id="{{row}}" name="{{row}}" onclick="myFunction(this,id)">
-                    <label for="{{row}}"> {{row}} </label>
-                    <br>
-                    <br>
-                    <div class="info">
-                        <p class="title is-6">RPM:</p>
-                        <p id="{{row}}"></p>
-                        <br>
-                        <p class="title is-6">Latitud:</p>
-                        <p id="{{row}}"></p>
-                        <br>
-                        <p class="title is-6">Longitud: </p>
-                        <p id="{{row}}"></p>
-                        <br>
-                        <p class="title is-6">Fecha:</p>
-                        <p id="{{row}}"></p>
-                        <br>
-                        <p class="title is-6">Hora:</p>
-                        <p id="{{row}}"></p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div id="TaxiMap" class="mapa"></div>
-    </div>
-
-    <footer class="footer">
-        <div class="content has-text-centered">
-            <p>
-                <strong>© 2021 Copyright</strong> www.LosTaxisDelTio.com
-            </p>
-        </div>
-    </footer>
-
 </body>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin="">
-    </script>
-
-<script src="../static/js/mult.js"></script>
 
 </html>
