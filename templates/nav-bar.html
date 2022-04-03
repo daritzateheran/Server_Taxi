@@ -21,11 +21,11 @@
             </div>
         </div>
         <div class="navbar-start" style="margin-left: 100px;">
-            <a class="navbar-item" href=" {{  }} ">
+            <a class="navbar-item" href=" {{ url_for('index', placa=placas) }} ">
                 {{texto_1}}
             </a>
 
-            <a class="navbar-item" href=" {{  }} ">
+            <a class="navbar-item" href=" {{ url_for('historial', placa=placas) }} ">
                 {{texto_2}}
             </a>
         </div>
