@@ -1,7 +1,7 @@
-# TAXI LOCALIZATION
-taxi location is a app for  passengers to use it to find a taxi location.
+## Taxi Location
+A tracking system for taxi companies.
 
-### Language: python, javascript
+### Languages: Python, Javascript
 
 ### run proyect
 
